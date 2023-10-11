@@ -1,0 +1,2040 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 3.8.0 #10562 (Linux)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module serial
+                                      6 	.optsdcc -mmcs51 --model-small
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _table
+                                     12 	.globl _main
+                                     13 	.globl _lcd_init
+                                     14 	.globl _lcd_send_str
+                                     15 	.globl _lcd_send_data
+                                     16 	.globl _lcd_send_cmd
+                                     17 	.globl _lcd_write_byte
+                                     18 	.globl _lcd_slave
+                                     19 	.globl _i2c_buttons
+                                     20 	.globl _i2c_read
+                                     21 	.globl _i2c_write
+                                     22 	.globl _i2c_ack
+                                     23 	.globl _i2c_stop
+                                     24 	.globl _i2c_start
+                                     25 	.globl _rollOverNum
+                                     26 	.globl _rollUnderNum
+                                     27 	.globl _clock
+                                     28 	.globl _clockinc
+                                     29 	.globl _display
+                                     30 	.globl _delay
+                                     31 	.globl _TF2
+                                     32 	.globl _EXF2
+                                     33 	.globl _RCLK
+                                     34 	.globl _TCLK
+                                     35 	.globl _EXEN2
+                                     36 	.globl _TR2
+                                     37 	.globl _C_T2
+                                     38 	.globl _CP_RL2
+                                     39 	.globl _T2CON_7
+                                     40 	.globl _T2CON_6
+                                     41 	.globl _T2CON_5
+                                     42 	.globl _T2CON_4
+                                     43 	.globl _T2CON_3
+                                     44 	.globl _T2CON_2
+                                     45 	.globl _T2CON_1
+                                     46 	.globl _T2CON_0
+                                     47 	.globl _PT2
+                                     48 	.globl _ET2
+                                     49 	.globl _CY
+                                     50 	.globl _AC
+                                     51 	.globl _F0
+                                     52 	.globl _RS1
+                                     53 	.globl _RS0
+                                     54 	.globl _OV
+                                     55 	.globl _F1
+                                     56 	.globl _P
+                                     57 	.globl _PS
+                                     58 	.globl _PT1
+                                     59 	.globl _PX1
+                                     60 	.globl _PT0
+                                     61 	.globl _PX0
+                                     62 	.globl _RD
+                                     63 	.globl _WR
+                                     64 	.globl _T1
+                                     65 	.globl _T0
+                                     66 	.globl _INT1
+                                     67 	.globl _INT0
+                                     68 	.globl _TXD
+                                     69 	.globl _RXD
+                                     70 	.globl _P3_7
+                                     71 	.globl _P3_6
+                                     72 	.globl _P3_5
+                                     73 	.globl _P3_4
+                                     74 	.globl _P3_3
+                                     75 	.globl _P3_2
+                                     76 	.globl _P3_1
+                                     77 	.globl _P3_0
+                                     78 	.globl _EA
+                                     79 	.globl _ES
+                                     80 	.globl _ET1
+                                     81 	.globl _EX1
+                                     82 	.globl _ET0
+                                     83 	.globl _EX0
+                                     84 	.globl _P2_7
+                                     85 	.globl _P2_6
+                                     86 	.globl _P2_5
+                                     87 	.globl _P2_4
+                                     88 	.globl _P2_3
+                                     89 	.globl _P2_2
+                                     90 	.globl _P2_1
+                                     91 	.globl _P2_0
+                                     92 	.globl _SM0
+                                     93 	.globl _SM1
+                                     94 	.globl _SM2
+                                     95 	.globl _REN
+                                     96 	.globl _TB8
+                                     97 	.globl _RB8
+                                     98 	.globl _TI
+                                     99 	.globl _RI
+                                    100 	.globl _P1_7
+                                    101 	.globl _P1_6
+                                    102 	.globl _P1_5
+                                    103 	.globl _P1_4
+                                    104 	.globl _P1_3
+                                    105 	.globl _P1_2
+                                    106 	.globl _P1_1
+                                    107 	.globl _P1_0
+                                    108 	.globl _TF1
+                                    109 	.globl _TR1
+                                    110 	.globl _TF0
+                                    111 	.globl _TR0
+                                    112 	.globl _IE1
+                                    113 	.globl _IT1
+                                    114 	.globl _IE0
+                                    115 	.globl _IT0
+                                    116 	.globl _P0_7
+                                    117 	.globl _P0_6
+                                    118 	.globl _P0_5
+                                    119 	.globl _P0_4
+                                    120 	.globl _P0_3
+                                    121 	.globl _P0_2
+                                    122 	.globl _P0_1
+                                    123 	.globl _P0_0
+                                    124 	.globl _TH2
+                                    125 	.globl _TL2
+                                    126 	.globl _RCAP2H
+                                    127 	.globl _RCAP2L
+                                    128 	.globl _T2CON
+                                    129 	.globl _B
+                                    130 	.globl _ACC
+                                    131 	.globl _PSW
+                                    132 	.globl _IP
+                                    133 	.globl _P3
+                                    134 	.globl _IE
+                                    135 	.globl _P2
+                                    136 	.globl _SBUF
+                                    137 	.globl _SCON
+                                    138 	.globl _P1
+                                    139 	.globl _TH1
+                                    140 	.globl _TH0
+                                    141 	.globl _TL1
+                                    142 	.globl _TL0
+                                    143 	.globl _TMOD
+                                    144 	.globl _TCON
+                                    145 	.globl _PCON
+                                    146 	.globl _DPH
+                                    147 	.globl _DPL
+                                    148 	.globl _SP
+                                    149 	.globl _P0
+                                    150 	.globl _slave_add
+                                    151 	.globl _slave1
+                                    152 	.globl _button4
+                                    153 	.globl _button3
+                                    154 	.globl _button2
+                                    155 	.globl _button1
+                                    156 	.globl _downDir
+                                    157 	.globl _lDuoCycl
+                                    158 	.globl _rDuoCycl
+                                    159 	.globl _cyclone
+                                    160 	.globl _prev
+                                    161 	.globl _prevTimeCycl
+                                    162 	.globl _choice
+                                    163 	.globl _clockupdate
+                                    164 	.globl _clocktime
+                                    165 	.globl _displayNum
+                                    166 	.globl _putchar
+                                    167 ;--------------------------------------------------------
+                                    168 ; special function registers
+                                    169 ;--------------------------------------------------------
+                                    170 	.area RSEG    (ABS,DATA)
+      000000                        171 	.org 0x0000
+                           000080   172 _P0	=	0x0080
+                           000081   173 _SP	=	0x0081
+                           000082   174 _DPL	=	0x0082
+                           000083   175 _DPH	=	0x0083
+                           000087   176 _PCON	=	0x0087
+                           000088   177 _TCON	=	0x0088
+                           000089   178 _TMOD	=	0x0089
+                           00008A   179 _TL0	=	0x008a
+                           00008B   180 _TL1	=	0x008b
+                           00008C   181 _TH0	=	0x008c
+                           00008D   182 _TH1	=	0x008d
+                           000090   183 _P1	=	0x0090
+                           000098   184 _SCON	=	0x0098
+                           000099   185 _SBUF	=	0x0099
+                           0000A0   186 _P2	=	0x00a0
+                           0000A8   187 _IE	=	0x00a8
+                           0000B0   188 _P3	=	0x00b0
+                           0000B8   189 _IP	=	0x00b8
+                           0000D0   190 _PSW	=	0x00d0
+                           0000E0   191 _ACC	=	0x00e0
+                           0000F0   192 _B	=	0x00f0
+                           0000C8   193 _T2CON	=	0x00c8
+                           0000CA   194 _RCAP2L	=	0x00ca
+                           0000CB   195 _RCAP2H	=	0x00cb
+                           0000CC   196 _TL2	=	0x00cc
+                           0000CD   197 _TH2	=	0x00cd
+                                    198 ;--------------------------------------------------------
+                                    199 ; special function bits
+                                    200 ;--------------------------------------------------------
+                                    201 	.area RSEG    (ABS,DATA)
+      000000                        202 	.org 0x0000
+                           000080   203 _P0_0	=	0x0080
+                           000081   204 _P0_1	=	0x0081
+                           000082   205 _P0_2	=	0x0082
+                           000083   206 _P0_3	=	0x0083
+                           000084   207 _P0_4	=	0x0084
+                           000085   208 _P0_5	=	0x0085
+                           000086   209 _P0_6	=	0x0086
+                           000087   210 _P0_7	=	0x0087
+                           000088   211 _IT0	=	0x0088
+                           000089   212 _IE0	=	0x0089
+                           00008A   213 _IT1	=	0x008a
+                           00008B   214 _IE1	=	0x008b
+                           00008C   215 _TR0	=	0x008c
+                           00008D   216 _TF0	=	0x008d
+                           00008E   217 _TR1	=	0x008e
+                           00008F   218 _TF1	=	0x008f
+                           000090   219 _P1_0	=	0x0090
+                           000091   220 _P1_1	=	0x0091
+                           000092   221 _P1_2	=	0x0092
+                           000093   222 _P1_3	=	0x0093
+                           000094   223 _P1_4	=	0x0094
+                           000095   224 _P1_5	=	0x0095
+                           000096   225 _P1_6	=	0x0096
+                           000097   226 _P1_7	=	0x0097
+                           000098   227 _RI	=	0x0098
+                           000099   228 _TI	=	0x0099
+                           00009A   229 _RB8	=	0x009a
+                           00009B   230 _TB8	=	0x009b
+                           00009C   231 _REN	=	0x009c
+                           00009D   232 _SM2	=	0x009d
+                           00009E   233 _SM1	=	0x009e
+                           00009F   234 _SM0	=	0x009f
+                           0000A0   235 _P2_0	=	0x00a0
+                           0000A1   236 _P2_1	=	0x00a1
+                           0000A2   237 _P2_2	=	0x00a2
+                           0000A3   238 _P2_3	=	0x00a3
+                           0000A4   239 _P2_4	=	0x00a4
+                           0000A5   240 _P2_5	=	0x00a5
+                           0000A6   241 _P2_6	=	0x00a6
+                           0000A7   242 _P2_7	=	0x00a7
+                           0000A8   243 _EX0	=	0x00a8
+                           0000A9   244 _ET0	=	0x00a9
+                           0000AA   245 _EX1	=	0x00aa
+                           0000AB   246 _ET1	=	0x00ab
+                           0000AC   247 _ES	=	0x00ac
+                           0000AF   248 _EA	=	0x00af
+                           0000B0   249 _P3_0	=	0x00b0
+                           0000B1   250 _P3_1	=	0x00b1
+                           0000B2   251 _P3_2	=	0x00b2
+                           0000B3   252 _P3_3	=	0x00b3
+                           0000B4   253 _P3_4	=	0x00b4
+                           0000B5   254 _P3_5	=	0x00b5
+                           0000B6   255 _P3_6	=	0x00b6
+                           0000B7   256 _P3_7	=	0x00b7
+                           0000B0   257 _RXD	=	0x00b0
+                           0000B1   258 _TXD	=	0x00b1
+                           0000B2   259 _INT0	=	0x00b2
+                           0000B3   260 _INT1	=	0x00b3
+                           0000B4   261 _T0	=	0x00b4
+                           0000B5   262 _T1	=	0x00b5
+                           0000B6   263 _WR	=	0x00b6
+                           0000B7   264 _RD	=	0x00b7
+                           0000B8   265 _PX0	=	0x00b8
+                           0000B9   266 _PT0	=	0x00b9
+                           0000BA   267 _PX1	=	0x00ba
+                           0000BB   268 _PT1	=	0x00bb
+                           0000BC   269 _PS	=	0x00bc
+                           0000D0   270 _P	=	0x00d0
+                           0000D1   271 _F1	=	0x00d1
+                           0000D2   272 _OV	=	0x00d2
+                           0000D3   273 _RS0	=	0x00d3
+                           0000D4   274 _RS1	=	0x00d4
+                           0000D5   275 _F0	=	0x00d5
+                           0000D6   276 _AC	=	0x00d6
+                           0000D7   277 _CY	=	0x00d7
+                           0000AD   278 _ET2	=	0x00ad
+                           0000BD   279 _PT2	=	0x00bd
+                           0000C8   280 _T2CON_0	=	0x00c8
+                           0000C9   281 _T2CON_1	=	0x00c9
+                           0000CA   282 _T2CON_2	=	0x00ca
+                           0000CB   283 _T2CON_3	=	0x00cb
+                           0000CC   284 _T2CON_4	=	0x00cc
+                           0000CD   285 _T2CON_5	=	0x00cd
+                           0000CE   286 _T2CON_6	=	0x00ce
+                           0000CF   287 _T2CON_7	=	0x00cf
+                           0000C8   288 _CP_RL2	=	0x00c8
+                           0000C9   289 _C_T2	=	0x00c9
+                           0000CA   290 _TR2	=	0x00ca
+                           0000CB   291 _EXEN2	=	0x00cb
+                           0000CC   292 _TCLK	=	0x00cc
+                           0000CD   293 _RCLK	=	0x00cd
+                           0000CE   294 _EXF2	=	0x00ce
+                           0000CF   295 _TF2	=	0x00cf
+                                    296 ;--------------------------------------------------------
+                                    297 ; overlayable register banks
+                                    298 ;--------------------------------------------------------
+                                    299 	.area REG_BANK_0	(REL,OVR,DATA)
+      000000                        300 	.ds 8
+                                    301 ;--------------------------------------------------------
+                                    302 ; overlayable bit register bank
+                                    303 ;--------------------------------------------------------
+                                    304 	.area BIT_BANK	(REL,OVR,DATA)
+      000000                        305 bits:
+      000000                        306 	.ds 1
+                           008000   307 	b0 = bits[0]
+                           008100   308 	b1 = bits[1]
+                           008200   309 	b2 = bits[2]
+                           008300   310 	b3 = bits[3]
+                           008400   311 	b4 = bits[4]
+                           008500   312 	b5 = bits[5]
+                           008600   313 	b6 = bits[6]
+                           008700   314 	b7 = bits[7]
+                                    315 ;--------------------------------------------------------
+                                    316 ; internal ram data
+                                    317 ;--------------------------------------------------------
+                                    318 	.area DSEG    (DATA)
+      000000                        319 _displayNum::
+      000000                        320 	.ds 8
+      000008                        321 _clocktime::
+      000008                        322 	.ds 4
+      00000C                        323 _clockupdate::
+      00000C                        324 	.ds 1
+      00000D                        325 _choice::
+      00000D                        326 	.ds 2
+      00000F                        327 _prevTimeCycl::
+      00000F                        328 	.ds 4
+      000013                        329 _prev::
+      000013                        330 	.ds 4
+      000017                        331 _cyclone::
+      000017                        332 	.ds 2
+      000019                        333 _rDuoCycl::
+      000019                        334 	.ds 2
+      00001B                        335 _lDuoCycl::
+      00001B                        336 	.ds 2
+      00001D                        337 _downDir::
+      00001D                        338 	.ds 1
+      00001E                        339 _button1::
+      00001E                        340 	.ds 1
+      00001F                        341 _button2::
+      00001F                        342 	.ds 1
+      000020                        343 _button3::
+      000020                        344 	.ds 1
+      000021                        345 _button4::
+      000021                        346 	.ds 1
+      000022                        347 _slave1::
+      000022                        348 	.ds 1
+      000023                        349 _slave_add::
+      000023                        350 	.ds 1
+                                    351 ;--------------------------------------------------------
+                                    352 ; overlayable items in internal ram 
+                                    353 ;--------------------------------------------------------
+                                    354 	.area	OSEG    (OVR,DATA)
+                                    355 	.area	OSEG    (OVR,DATA)
+                                    356 	.area	OSEG    (OVR,DATA)
+                                    357 	.area	OSEG    (OVR,DATA)
+                                    358 	.area	OSEG    (OVR,DATA)
+                                    359 	.area	OSEG    (OVR,DATA)
+                                    360 	.area	OSEG    (OVR,DATA)
+                                    361 ;--------------------------------------------------------
+                                    362 ; Stack segment in internal ram 
+                                    363 ;--------------------------------------------------------
+                                    364 	.area	SSEG
+      000000                        365 __start__stack:
+      000000                        366 	.ds	1
+                                    367 
+                                    368 ;--------------------------------------------------------
+                                    369 ; indirectly addressable internal ram data
+                                    370 ;--------------------------------------------------------
+                                    371 	.area ISEG    (DATA)
+                                    372 ;--------------------------------------------------------
+                                    373 ; absolute internal ram data
+                                    374 ;--------------------------------------------------------
+                                    375 	.area IABS    (ABS,DATA)
+                                    376 	.area IABS    (ABS,DATA)
+                                    377 ;--------------------------------------------------------
+                                    378 ; bit data
+                                    379 ;--------------------------------------------------------
+                                    380 	.area BSEG    (BIT)
+                                    381 ;--------------------------------------------------------
+                                    382 ; paged external ram data
+                                    383 ;--------------------------------------------------------
+                                    384 	.area PSEG    (PAG,XDATA)
+                                    385 ;--------------------------------------------------------
+                                    386 ; external ram data
+                                    387 ;--------------------------------------------------------
+                                    388 	.area XSEG    (XDATA)
+                                    389 ;--------------------------------------------------------
+                                    390 ; absolute external ram data
+                                    391 ;--------------------------------------------------------
+                                    392 	.area XABS    (ABS,XDATA)
+                                    393 ;--------------------------------------------------------
+                                    394 ; external initialized ram data
+                                    395 ;--------------------------------------------------------
+                                    396 	.area XISEG   (XDATA)
+                                    397 	.area HOME    (CODE)
+                                    398 	.area GSINIT0 (CODE)
+                                    399 	.area GSINIT1 (CODE)
+                                    400 	.area GSINIT2 (CODE)
+                                    401 	.area GSINIT3 (CODE)
+                                    402 	.area GSINIT4 (CODE)
+                                    403 	.area GSINIT5 (CODE)
+                                    404 	.area GSINIT  (CODE)
+                                    405 	.area GSFINAL (CODE)
+                                    406 	.area CSEG    (CODE)
+                                    407 ;--------------------------------------------------------
+                                    408 ; interrupt vector 
+                                    409 ;--------------------------------------------------------
+                                    410 	.area HOME    (CODE)
+      000000                        411 __interrupt_vect:
+      000000 02r00r00         [24]  412 	ljmp	__sdcc_gsinit_startup
+      000003 32               [24]  413 	reti
+      000004                        414 	.ds	7
+      00000B 02r00rA9         [24]  415 	ljmp	_clockinc
+                                    416 ;--------------------------------------------------------
+                                    417 ; global & static initialisations
+                                    418 ;--------------------------------------------------------
+                                    419 	.area HOME    (CODE)
+                                    420 	.area GSINIT  (CODE)
+                                    421 	.area GSFINAL (CODE)
+                                    422 	.area GSINIT  (CODE)
+                                    423 	.globl __sdcc_gsinit_startup
+                                    424 	.globl __sdcc_program_startup
+                                    425 	.globl __start__stack
+                                    426 	.globl __mcs51_genXINIT
+                                    427 	.globl __mcs51_genXRAMCLEAR
+                                    428 	.globl __mcs51_genRAMCLEAR
+                                    429 ;	serial.c:10: int displayNum[] = {0, 0, 0, 0};
+      000000 E4               [12]  430 	clr	a
+      000001 F5*00            [12]  431 	mov	(_displayNum + 0),a
+      000003 F5*01            [12]  432 	mov	(_displayNum + 1),a
+      000005 F5*02            [12]  433 	mov	((_displayNum + 0x0002) + 0),a
+      000007 F5*03            [12]  434 	mov	((_displayNum + 0x0002) + 1),a
+      000009 F5*04            [12]  435 	mov	((_displayNum + 0x0004) + 0),a
+      00000B F5*05            [12]  436 	mov	((_displayNum + 0x0004) + 1),a
+      00000D F5*06            [12]  437 	mov	((_displayNum + 0x0006) + 0),a
+      00000F F5*07            [12]  438 	mov	((_displayNum + 0x0006) + 1),a
+                                    439 ;	serial.c:14: unsigned int choice = 0;
+      000011 F5*0D            [12]  440 	mov	_choice,a
+      000013 F5*0E            [12]  441 	mov	(_choice + 1),a
+                                    442 ;	serial.c:15: unsigned long int prevTimeCycl = 0;
+      000015 F5*0F            [12]  443 	mov	_prevTimeCycl,a
+      000017 F5*10            [12]  444 	mov	(_prevTimeCycl + 1),a
+      000019 F5*11            [12]  445 	mov	(_prevTimeCycl + 2),a
+      00001B F5*12            [12]  446 	mov	(_prevTimeCycl + 3),a
+                                    447 ;	serial.c:16: unsigned long int prev = 0;
+      00001D F5*13            [12]  448 	mov	_prev,a
+      00001F F5*14            [12]  449 	mov	(_prev + 1),a
+      000021 F5*15            [12]  450 	mov	(_prev + 2),a
+      000023 F5*16            [12]  451 	mov	(_prev + 3),a
+                                    452 ;	serial.c:17: unsigned int cyclone = 0x03;
+      000025 75*17 03         [24]  453 	mov	_cyclone,#0x03
+                                    454 ;	1-genFromRTrack replaced	mov	(_cyclone + 1),#0x00
+      000028 F5*18            [12]  455 	mov	(_cyclone + 1),a
+                                    456 ;	serial.c:18: unsigned int rDuoCycl = 0x03;
+      00002A 75*19 03         [24]  457 	mov	_rDuoCycl,#0x03
+                                    458 ;	1-genFromRTrack replaced	mov	(_rDuoCycl + 1),#0x00
+      00002D F5*1A            [12]  459 	mov	(_rDuoCycl + 1),a
+                                    460 ;	serial.c:19: unsigned int lDuoCycl = 0xC0;
+      00002F 75*1B C0         [24]  461 	mov	_lDuoCycl,#0xc0
+                                    462 ;	1-genFromRTrack replaced	mov	(_lDuoCycl + 1),#0x00
+      000032 F5*1C            [12]  463 	mov	(_lDuoCycl + 1),a
+                                    464 ;	serial.c:20: volatile _Bool downDir = true;
+      000034 75*1D 01         [24]  465 	mov	_downDir,#0x01
+                                    466 ;	serial.c:21: unsigned char button1 = 0;
+                                    467 ;	1-genFromRTrack replaced	mov	_button1,#0x00
+      000037 F5*1E            [12]  468 	mov	_button1,a
+                                    469 ;	serial.c:22: unsigned char button2 = 0;
+                                    470 ;	1-genFromRTrack replaced	mov	_button2,#0x00
+      000039 F5*1F            [12]  471 	mov	_button2,a
+                                    472 ;	serial.c:23: unsigned char button3 = 0;
+                                    473 ;	1-genFromRTrack replaced	mov	_button3,#0x00
+      00003B F5*20            [12]  474 	mov	_button3,a
+                                    475 ;	serial.c:24: unsigned char button4 = 0;
+                                    476 ;	1-genFromRTrack replaced	mov	_button4,#0x00
+      00003D F5*21            [12]  477 	mov	_button4,a
+                                    478 ;	serial.c:25: unsigned char slave1=0x4E;
+      00003F 75*22 4E         [24]  479 	mov	_slave1,#0x4e
+                                    480 	.area GSFINAL (CODE)
+      000000 02r00r0E         [24]  481 	ljmp	__sdcc_program_startup
+                                    482 ;--------------------------------------------------------
+                                    483 ; Home
+                                    484 ;--------------------------------------------------------
+                                    485 	.area HOME    (CODE)
+                                    486 	.area HOME    (CODE)
+      00000E                        487 __sdcc_program_startup:
+      00000E 02r06r91         [24]  488 	ljmp	_main
+                                    489 ;	return from main will return to caller
+                                    490 ;--------------------------------------------------------
+                                    491 ; code
+                                    492 ;--------------------------------------------------------
+                                    493 	.area CSEG    (CODE)
+                                    494 ;------------------------------------------------------------
+                                    495 ;Allocation info for local variables in function 'delay'
+                                    496 ;------------------------------------------------------------
+                                    497 ;i                         Allocated to registers 
+                                    498 ;j                         Allocated to registers r6 r7 
+                                    499 ;k                         Allocated to registers r4 r5 
+                                    500 ;------------------------------------------------------------
+                                    501 ;	serial.c:28: void delay(unsigned int i){
+                                    502 ;	-----------------------------------------
+                                    503 ;	 function delay
+                                    504 ;	-----------------------------------------
+      000000                        505 _delay:
+                           000007   506 	ar7 = 0x07
+                           000006   507 	ar6 = 0x06
+                           000005   508 	ar5 = 0x05
+                           000004   509 	ar4 = 0x04
+                           000003   510 	ar3 = 0x03
+                           000002   511 	ar2 = 0x02
+                           000001   512 	ar1 = 0x01
+                           000000   513 	ar0 = 0x00
+      000000 AE 82            [24]  514 	mov	r6,dpl
+      000002 AF 83            [24]  515 	mov	r7,dph
+                                    516 ;	serial.c:31: for(j = i; j > 0; j--)
+      000004                        517 00106$:
+      000004 EE               [12]  518 	mov	a,r6
+      000005 4F               [12]  519 	orl	a,r7
+      000006 60 1B            [24]  520 	jz	00108$
+                                    521 ;	serial.c:32: for(k = 125; k > 0; k--);
+      000008 7C 7D            [12]  522 	mov	r4,#0x7d
+      00000A 7D 00            [12]  523 	mov	r5,#0x00
+      00000C                        524 00104$:
+      00000C EC               [12]  525 	mov	a,r4
+      00000D 24 FF            [12]  526 	add	a,#0xff
+      00000F FA               [12]  527 	mov	r2,a
+      000010 ED               [12]  528 	mov	a,r5
+      000011 34 FF            [12]  529 	addc	a,#0xff
+      000013 FB               [12]  530 	mov	r3,a
+      000014 8A 04            [24]  531 	mov	ar4,r2
+      000016 8B 05            [24]  532 	mov	ar5,r3
+      000018 EA               [12]  533 	mov	a,r2
+      000019 4B               [12]  534 	orl	a,r3
+      00001A 70 F0            [24]  535 	jnz	00104$
+                                    536 ;	serial.c:31: for(j = i; j > 0; j--)
+      00001C 1E               [12]  537 	dec	r6
+      00001D BE FF 01         [24]  538 	cjne	r6,#0xff,00133$
+      000020 1F               [12]  539 	dec	r7
+      000021                        540 00133$:
+      000021 80 E1            [24]  541 	sjmp	00106$
+      000023                        542 00108$:
+                                    543 ;	serial.c:33: }
+      000023 22               [24]  544 	ret
+                                    545 ;------------------------------------------------------------
+                                    546 ;Allocation info for local variables in function 'display'
+                                    547 ;------------------------------------------------------------
+                                    548 ;	serial.c:35: void display(void){
+                                    549 ;	-----------------------------------------
+                                    550 ;	 function display
+                                    551 ;	-----------------------------------------
+      000024                        552 _display:
+                                    553 ;	serial.c:36: P0 = table[displayNum[3]];
+      000024 E5*06            [12]  554 	mov	a,(_displayNum + 0x0006)
+      000026 25 E0            [12]  555 	add	a,acc
+      000028 FE               [12]  556 	mov	r6,a
+      000029 E5*07            [12]  557 	mov	a,((_displayNum + 0x0006) + 1)
+      00002B 33               [12]  558 	rlc	a
+      00002C FF               [12]  559 	mov	r7,a
+      00002D EE               [12]  560 	mov	a,r6
+      00002E 24r00            [12]  561 	add	a,#_table
+      000030 F5 82            [12]  562 	mov	dpl,a
+      000032 EF               [12]  563 	mov	a,r7
+      000033 34s00            [12]  564 	addc	a,#(_table >> 8)
+      000035 F5 83            [12]  565 	mov	dph,a
+      000037 E4               [12]  566 	clr	a
+      000038 93               [24]  567 	movc	a,@a+dptr
+      000039 F5 80            [12]  568 	mov	_P0,a
+                                    569 ;	serial.c:37: P2_0 = 0;
+                                    570 ;	assignBit
+      00003B C2 A0            [12]  571 	clr	_P2_0
+                                    572 ;	serial.c:38: delay(2);
+      00003D 90 00 02         [24]  573 	mov	dptr,#0x0002
+      000040 12r00r00         [24]  574 	lcall	_delay
+                                    575 ;	serial.c:39: P2_0 = 1;
+                                    576 ;	assignBit
+      000043 D2 A0            [12]  577 	setb	_P2_0
+                                    578 ;	serial.c:41: P0 = table[displayNum[2]];
+      000045 E5*04            [12]  579 	mov	a,(_displayNum + 0x0004)
+      000047 25 E0            [12]  580 	add	a,acc
+      000049 FE               [12]  581 	mov	r6,a
+      00004A E5*05            [12]  582 	mov	a,((_displayNum + 0x0004) + 1)
+      00004C 33               [12]  583 	rlc	a
+      00004D FF               [12]  584 	mov	r7,a
+      00004E EE               [12]  585 	mov	a,r6
+      00004F 24r00            [12]  586 	add	a,#_table
+      000051 F5 82            [12]  587 	mov	dpl,a
+      000053 EF               [12]  588 	mov	a,r7
+      000054 34s00            [12]  589 	addc	a,#(_table >> 8)
+      000056 F5 83            [12]  590 	mov	dph,a
+      000058 E4               [12]  591 	clr	a
+      000059 93               [24]  592 	movc	a,@a+dptr
+      00005A F5 80            [12]  593 	mov	_P0,a
+                                    594 ;	serial.c:42: P2_1 = 0;
+                                    595 ;	assignBit
+      00005C C2 A1            [12]  596 	clr	_P2_1
+                                    597 ;	serial.c:43: delay(2);
+      00005E 90 00 02         [24]  598 	mov	dptr,#0x0002
+      000061 12r00r00         [24]  599 	lcall	_delay
+                                    600 ;	serial.c:44: P2_1 = 1;
+                                    601 ;	assignBit
+      000064 D2 A1            [12]  602 	setb	_P2_1
+                                    603 ;	serial.c:46: P0 = table[displayNum[1]];
+      000066 E5*02            [12]  604 	mov	a,(_displayNum + 0x0002)
+      000068 25 E0            [12]  605 	add	a,acc
+      00006A FE               [12]  606 	mov	r6,a
+      00006B E5*03            [12]  607 	mov	a,((_displayNum + 0x0002) + 1)
+      00006D 33               [12]  608 	rlc	a
+      00006E FF               [12]  609 	mov	r7,a
+      00006F EE               [12]  610 	mov	a,r6
+      000070 24r00            [12]  611 	add	a,#_table
+      000072 F5 82            [12]  612 	mov	dpl,a
+      000074 EF               [12]  613 	mov	a,r7
+      000075 34s00            [12]  614 	addc	a,#(_table >> 8)
+      000077 F5 83            [12]  615 	mov	dph,a
+      000079 E4               [12]  616 	clr	a
+      00007A 93               [24]  617 	movc	a,@a+dptr
+      00007B F5 80            [12]  618 	mov	_P0,a
+                                    619 ;	serial.c:47: P2_2 = 0;
+                                    620 ;	assignBit
+      00007D C2 A2            [12]  621 	clr	_P2_2
+                                    622 ;	serial.c:48: delay(2);
+      00007F 90 00 02         [24]  623 	mov	dptr,#0x0002
+      000082 12r00r00         [24]  624 	lcall	_delay
+                                    625 ;	serial.c:49: P2_2 = 1;
+                                    626 ;	assignBit
+      000085 D2 A2            [12]  627 	setb	_P2_2
+                                    628 ;	serial.c:51: P0 = table[displayNum[0]];
+      000087 E5*00            [12]  629 	mov	a,_displayNum
+      000089 25*00            [12]  630 	add	a,_displayNum
+      00008B FE               [12]  631 	mov	r6,a
+      00008C E5*01            [12]  632 	mov	a,(_displayNum + 1)
+      00008E 33               [12]  633 	rlc	a
+      00008F FF               [12]  634 	mov	r7,a
+      000090 EE               [12]  635 	mov	a,r6
+      000091 24r00            [12]  636 	add	a,#_table
+      000093 F5 82            [12]  637 	mov	dpl,a
+      000095 EF               [12]  638 	mov	a,r7
+      000096 34s00            [12]  639 	addc	a,#(_table >> 8)
+      000098 F5 83            [12]  640 	mov	dph,a
+      00009A E4               [12]  641 	clr	a
+      00009B 93               [24]  642 	movc	a,@a+dptr
+      00009C F5 80            [12]  643 	mov	_P0,a
+                                    644 ;	serial.c:52: P2_3 = 0;
+                                    645 ;	assignBit
+      00009E C2 A3            [12]  646 	clr	_P2_3
+                                    647 ;	serial.c:53: delay(2);
+      0000A0 90 00 02         [24]  648 	mov	dptr,#0x0002
+      0000A3 12r00r00         [24]  649 	lcall	_delay
+                                    650 ;	serial.c:54: P2_3 = 1;
+                                    651 ;	assignBit
+      0000A6 D2 A3            [12]  652 	setb	_P2_3
+                                    653 ;	serial.c:55: }
+      0000A8 22               [24]  654 	ret
+                                    655 ;------------------------------------------------------------
+                                    656 ;Allocation info for local variables in function 'clockinc'
+                                    657 ;------------------------------------------------------------
+                                    658 ;i                         Allocated to registers 
+                                    659 ;------------------------------------------------------------
+                                    660 ;	serial.c:57: void clockinc(void) __interrupt(1)
+                                    661 ;	-----------------------------------------
+                                    662 ;	 function clockinc
+                                    663 ;	-----------------------------------------
+      0000A9                        664 _clockinc:
+      0000A9 C0*00            [24]  665 	push	bits
+      0000AB C0 E0            [24]  666 	push	acc
+      0000AD C0 F0            [24]  667 	push	b
+      0000AF C0 82            [24]  668 	push	dpl
+      0000B1 C0 83            [24]  669 	push	dph
+      0000B3 C0 07            [24]  670 	push	(0+7)
+      0000B5 C0 06            [24]  671 	push	(0+6)
+      0000B7 C0 05            [24]  672 	push	(0+5)
+      0000B9 C0 04            [24]  673 	push	(0+4)
+      0000BB C0 03            [24]  674 	push	(0+3)
+      0000BD C0 02            [24]  675 	push	(0+2)
+      0000BF C0 01            [24]  676 	push	(0+1)
+      0000C1 C0 00            [24]  677 	push	(0+0)
+      0000C3 C0 D0            [24]  678 	push	psw
+      0000C5 75 D0 00         [24]  679 	mov	psw,#0x00
+                                    680 ;	serial.c:60: TH0 = (65536 - 922) / 256;
+      0000C8 75 8C FC         [24]  681 	mov	_TH0,#0xfc
+                                    682 ;	serial.c:61: TL0 = (65536 - 922) % 256;
+      0000CB 75 8A 66         [24]  683 	mov	_TL0,#0x66
+                                    684 ;	serial.c:62: clocktime++;
+      0000CE 74 01            [12]  685 	mov	a,#0x01
+      0000D0 25*08            [12]  686 	add	a,_clocktime
+      0000D2 F5*08            [12]  687 	mov	_clocktime,a
+      0000D4 E4               [12]  688 	clr	a
+      0000D5 35*09            [12]  689 	addc	a,(_clocktime + 1)
+      0000D7 F5*09            [12]  690 	mov	(_clocktime + 1),a
+      0000D9 E4               [12]  691 	clr	a
+      0000DA 35*0A            [12]  692 	addc	a,(_clocktime + 2)
+      0000DC F5*0A            [12]  693 	mov	(_clocktime + 2),a
+      0000DE E4               [12]  694 	clr	a
+      0000DF 35*0B            [12]  695 	addc	a,(_clocktime + 3)
+      0000E1 F5*0B            [12]  696 	mov	(_clocktime + 3),a
+                                    697 ;	serial.c:63: clockupdate = true;
+      0000E3 75*0C 01         [24]  698 	mov	_clockupdate,#0x01
+                                    699 ;	serial.c:65: switch(choice){
+      0000E6 E4               [12]  700 	clr	a
+      0000E7 B5*0D 05         [24]  701 	cjne	a,_choice,00179$
+      0000EA B5*0E 02         [24]  702 	cjne	a,(_choice + 1),00179$
+      0000ED 80 1A            [24]  703 	sjmp	00101$
+      0000EF                        704 00179$:
+      0000EF 74 01            [12]  705 	mov	a,#0x01
+      0000F1 B5*0D 06         [24]  706 	cjne	a,_choice,00180$
+      0000F4 14               [12]  707 	dec	a
+      0000F5 B5*0E 02         [24]  708 	cjne	a,(_choice + 1),00180$
+      0000F8 80 67            [24]  709 	sjmp	00104$
+      0000FA                        710 00180$:
+      0000FA 74 02            [12]  711 	mov	a,#0x02
+      0000FC B5*0D 07         [24]  712 	cjne	a,_choice,00181$
+      0000FF E4               [12]  713 	clr	a
+      000100 B5*0E 03         [24]  714 	cjne	a,(_choice + 1),00181$
+      000103 02r01rFA         [24]  715 	ljmp	00116$
+      000106                        716 00181$:
+      000106 02r02rC9         [24]  717 	ljmp	00129$
+                                    718 ;	serial.c:66: case 0:
+      000109                        719 00101$:
+                                    720 ;	serial.c:67: if((clocktime - prev) > 500){
+      000109 E5*08            [12]  721 	mov	a,_clocktime
+      00010B C3               [12]  722 	clr	c
+      00010C 95*13            [12]  723 	subb	a,_prev
+      00010E FC               [12]  724 	mov	r4,a
+      00010F E5*09            [12]  725 	mov	a,(_clocktime + 1)
+      000111 95*14            [12]  726 	subb	a,(_prev + 1)
+      000113 FD               [12]  727 	mov	r5,a
+      000114 E5*0A            [12]  728 	mov	a,(_clocktime + 2)
+      000116 95*15            [12]  729 	subb	a,(_prev + 2)
+      000118 FE               [12]  730 	mov	r6,a
+      000119 E5*0B            [12]  731 	mov	a,(_clocktime + 3)
+      00011B 95*16            [12]  732 	subb	a,(_prev + 3)
+      00011D FF               [12]  733 	mov	r7,a
+      00011E C3               [12]  734 	clr	c
+      00011F 74 F4            [12]  735 	mov	a,#0xf4
+      000121 9C               [12]  736 	subb	a,r4
+      000122 74 01            [12]  737 	mov	a,#0x01
+      000124 9D               [12]  738 	subb	a,r5
+      000125 E4               [12]  739 	clr	a
+      000126 9E               [12]  740 	subb	a,r6
+      000127 E4               [12]  741 	clr	a
+      000128 9F               [12]  742 	subb	a,r7
+      000129 40 03            [24]  743 	jc	00182$
+      00012B 02r02rC9         [24]  744 	ljmp	00129$
+      00012E                        745 00182$:
+                                    746 ;	serial.c:68: prev = clocktime;
+      00012E 85*08*13         [24]  747 	mov	_prev,_clocktime
+      000131 85*09*14         [24]  748 	mov	(_prev + 1),(_clocktime + 1)
+      000134 85*0A*15         [24]  749 	mov	(_prev + 2),(_clocktime + 2)
+      000137 85*0B*16         [24]  750 	mov	(_prev + 3),(_clocktime + 3)
+                                    751 ;	serial.c:69: P1 = ~(clocktime/500) & 0xFF;
+      00013A 75*00 F4         [24]  752 	mov	__divulong_PARM_2,#0xf4
+      00013D 75*01 01         [24]  753 	mov	(__divulong_PARM_2 + 1),#0x01
+      000140 E4               [12]  754 	clr	a
+      000141 F5*02            [12]  755 	mov	(__divulong_PARM_2 + 2),a
+      000143 F5*03            [12]  756 	mov	(__divulong_PARM_2 + 3),a
+      000145 85*08 82         [24]  757 	mov	dpl,_clocktime
+      000148 85*09 83         [24]  758 	mov	dph,(_clocktime + 1)
+      00014B 85*0A F0         [24]  759 	mov	b,(_clocktime + 2)
+      00014E E5*0B            [12]  760 	mov	a,(_clocktime + 3)
+      000150 12r00r00         [24]  761 	lcall	__divulong
+      000153 AC 82            [24]  762 	mov	r4,dpl
+      000155 AD 83            [24]  763 	mov	r5,dph
+      000157 AE F0            [24]  764 	mov	r6,b
+      000159 FF               [12]  765 	mov	r7,a
+      00015A EC               [12]  766 	mov	a,r4
+      00015B F4               [12]  767 	cpl	a
+      00015C F5 90            [12]  768 	mov	_P1,a
+                                    769 ;	serial.c:71: break;
+      00015E 02r02rC9         [24]  770 	ljmp	00129$
+                                    771 ;	serial.c:72: case 1:
+      000161                        772 00104$:
+                                    773 ;	serial.c:73: if((clocktime - prevTimeCycl) > 500){
+      000161 E5*08            [12]  774 	mov	a,_clocktime
+      000163 C3               [12]  775 	clr	c
+      000164 95*0F            [12]  776 	subb	a,_prevTimeCycl
+      000166 FC               [12]  777 	mov	r4,a
+      000167 E5*09            [12]  778 	mov	a,(_clocktime + 1)
+      000169 95*10            [12]  779 	subb	a,(_prevTimeCycl + 1)
+      00016B FD               [12]  780 	mov	r5,a
+      00016C E5*0A            [12]  781 	mov	a,(_clocktime + 2)
+      00016E 95*11            [12]  782 	subb	a,(_prevTimeCycl + 2)
+      000170 FE               [12]  783 	mov	r6,a
+      000171 E5*0B            [12]  784 	mov	a,(_clocktime + 3)
+      000173 95*12            [12]  785 	subb	a,(_prevTimeCycl + 3)
+      000175 FF               [12]  786 	mov	r7,a
+      000176 C3               [12]  787 	clr	c
+      000177 74 F4            [12]  788 	mov	a,#0xf4
+      000179 9C               [12]  789 	subb	a,r4
+      00017A 74 01            [12]  790 	mov	a,#0x01
+      00017C 9D               [12]  791 	subb	a,r5
+      00017D E4               [12]  792 	clr	a
+      00017E 9E               [12]  793 	subb	a,r6
+      00017F E4               [12]  794 	clr	a
+      000180 9F               [12]  795 	subb	a,r7
+      000181 40 03            [24]  796 	jc	00183$
+      000183 02r02rC9         [24]  797 	ljmp	00129$
+      000186                        798 00183$:
+                                    799 ;	serial.c:74: prevTimeCycl = clocktime;
+      000186 85*08*0F         [24]  800 	mov	_prevTimeCycl,_clocktime
+      000189 85*09*10         [24]  801 	mov	(_prevTimeCycl + 1),(_clocktime + 1)
+      00018C 85*0A*11         [24]  802 	mov	(_prevTimeCycl + 2),(_clocktime + 2)
+      00018F 85*0B*12         [24]  803 	mov	(_prevTimeCycl + 3),(_clocktime + 3)
+                                    804 ;	serial.c:75: if(downDir){
+      000192 E5*1D            [12]  805 	mov	a,_downDir
+      000194 60 32            [24]  806 	jz	00112$
+                                    807 ;	serial.c:76: P1 = ~cyclone & 0xFF;
+      000196 E5*17            [12]  808 	mov	a,_cyclone
+      000198 FF               [12]  809 	mov	r7,a
+      000199 F4               [12]  810 	cpl	a
+      00019A F5 90            [12]  811 	mov	_P1,a
+                                    812 ;	serial.c:77: if(cyclone == 0xC0){
+      00019C 74 C0            [12]  813 	mov	a,#0xc0
+      00019E B5*17 06         [24]  814 	cjne	a,_cyclone,00185$
+      0001A1 E4               [12]  815 	clr	a
+      0001A2 B5*18 02         [24]  816 	cjne	a,(_cyclone + 1),00185$
+      0001A5 80 02            [24]  817 	sjmp	00186$
+      0001A7                        818 00185$:
+      0001A7 80 11            [24]  819 	sjmp	00106$
+      0001A9                        820 00186$:
+                                    821 ;	serial.c:78: downDir = false;
+      0001A9 75*1D 00         [24]  822 	mov	_downDir,#0x00
+                                    823 ;	serial.c:79: cyclone = cyclone >> 1;
+      0001AC E5*18            [12]  824 	mov	a,(_cyclone + 1)
+      0001AE C3               [12]  825 	clr	c
+      0001AF 13               [12]  826 	rrc	a
+      0001B0 C5*17            [12]  827 	xch	a,_cyclone
+      0001B2 13               [12]  828 	rrc	a
+      0001B3 C5*17            [12]  829 	xch	a,_cyclone
+      0001B5 F5*18            [12]  830 	mov	(_cyclone + 1),a
+      0001B7 02r02rC9         [24]  831 	ljmp	00129$
+      0001BA                        832 00106$:
+                                    833 ;	serial.c:81: cyclone = cyclone << 1;
+      0001BA E5*17            [12]  834 	mov	a,_cyclone
+      0001BC 25*17            [12]  835 	add	a,_cyclone
+      0001BE F5*17            [12]  836 	mov	_cyclone,a
+      0001C0 E5*18            [12]  837 	mov	a,(_cyclone + 1)
+      0001C2 33               [12]  838 	rlc	a
+      0001C3 F5*18            [12]  839 	mov	(_cyclone + 1),a
+      0001C5 02r02rC9         [24]  840 	ljmp	00129$
+      0001C8                        841 00112$:
+                                    842 ;	serial.c:84: P1 = ~cyclone & 0xFF;
+      0001C8 E5*17            [12]  843 	mov	a,_cyclone
+      0001CA FF               [12]  844 	mov	r7,a
+      0001CB F4               [12]  845 	cpl	a
+      0001CC F5 90            [12]  846 	mov	_P1,a
+                                    847 ;	serial.c:85: if(cyclone == 0x03){
+      0001CE 74 03            [12]  848 	mov	a,#0x03
+      0001D0 B5*17 06         [24]  849 	cjne	a,_cyclone,00187$
+      0001D3 E4               [12]  850 	clr	a
+      0001D4 B5*18 02         [24]  851 	cjne	a,(_cyclone + 1),00187$
+      0001D7 80 02            [24]  852 	sjmp	00188$
+      0001D9                        853 00187$:
+      0001D9 80 11            [24]  854 	sjmp	00109$
+      0001DB                        855 00188$:
+                                    856 ;	serial.c:86: downDir = true;
+      0001DB 75*1D 01         [24]  857 	mov	_downDir,#0x01
+                                    858 ;	serial.c:87: cyclone = cyclone << 1;
+      0001DE E5*17            [12]  859 	mov	a,_cyclone
+      0001E0 25*17            [12]  860 	add	a,_cyclone
+      0001E2 F5*17            [12]  861 	mov	_cyclone,a
+      0001E4 E5*18            [12]  862 	mov	a,(_cyclone + 1)
+      0001E6 33               [12]  863 	rlc	a
+      0001E7 F5*18            [12]  864 	mov	(_cyclone + 1),a
+      0001E9 02r02rC9         [24]  865 	ljmp	00129$
+      0001EC                        866 00109$:
+                                    867 ;	serial.c:89: cyclone = cyclone >> 1;
+      0001EC E5*18            [12]  868 	mov	a,(_cyclone + 1)
+      0001EE C3               [12]  869 	clr	c
+      0001EF 13               [12]  870 	rrc	a
+      0001F0 C5*17            [12]  871 	xch	a,_cyclone
+      0001F2 13               [12]  872 	rrc	a
+      0001F3 C5*17            [12]  873 	xch	a,_cyclone
+      0001F5 F5*18            [12]  874 	mov	(_cyclone + 1),a
+                                    875 ;	serial.c:94: break;
+      0001F7 02r02rC9         [24]  876 	ljmp	00129$
+                                    877 ;	serial.c:95: case 2:
+      0001FA                        878 00116$:
+                                    879 ;	serial.c:96: if((clocktime - prevTimeCycl) > 500){
+      0001FA E5*08            [12]  880 	mov	a,_clocktime
+      0001FC C3               [12]  881 	clr	c
+      0001FD 95*0F            [12]  882 	subb	a,_prevTimeCycl
+      0001FF FC               [12]  883 	mov	r4,a
+      000200 E5*09            [12]  884 	mov	a,(_clocktime + 1)
+      000202 95*10            [12]  885 	subb	a,(_prevTimeCycl + 1)
+      000204 FD               [12]  886 	mov	r5,a
+      000205 E5*0A            [12]  887 	mov	a,(_clocktime + 2)
+      000207 95*11            [12]  888 	subb	a,(_prevTimeCycl + 2)
+      000209 FE               [12]  889 	mov	r6,a
+      00020A E5*0B            [12]  890 	mov	a,(_clocktime + 3)
+      00020C 95*12            [12]  891 	subb	a,(_prevTimeCycl + 3)
+      00020E FF               [12]  892 	mov	r7,a
+      00020F C3               [12]  893 	clr	c
+      000210 74 F4            [12]  894 	mov	a,#0xf4
+      000212 9C               [12]  895 	subb	a,r4
+      000213 74 01            [12]  896 	mov	a,#0x01
+      000215 9D               [12]  897 	subb	a,r5
+      000216 E4               [12]  898 	clr	a
+      000217 9E               [12]  899 	subb	a,r6
+      000218 E4               [12]  900 	clr	a
+      000219 9F               [12]  901 	subb	a,r7
+      00021A 40 03            [24]  902 	jc	00189$
+      00021C 02r02rC9         [24]  903 	ljmp	00129$
+      00021F                        904 00189$:
+                                    905 ;	serial.c:97: prevTimeCycl = clocktime;
+      00021F 85*08*0F         [24]  906 	mov	_prevTimeCycl,_clocktime
+      000222 85*09*10         [24]  907 	mov	(_prevTimeCycl + 1),(_clocktime + 1)
+      000225 85*0A*11         [24]  908 	mov	(_prevTimeCycl + 2),(_clocktime + 2)
+      000228 85*0B*12         [24]  909 	mov	(_prevTimeCycl + 3),(_clocktime + 3)
+                                    910 ;	serial.c:98: if(downDir){
+      00022B E5*1D            [12]  911 	mov	a,_downDir
+      00022D 60 4E            [24]  912 	jz	00124$
+                                    913 ;	serial.c:99: P1 = ~(rDuoCycl | lDuoCycl) & 0xFF;
+      00022F E5*1B            [12]  914 	mov	a,_lDuoCycl
+      000231 45*19            [12]  915 	orl	a,_rDuoCycl
+      000233 FE               [12]  916 	mov	r6,a
+      000234 E5*1C            [12]  917 	mov	a,(_lDuoCycl + 1)
+      000236 45*1A            [12]  918 	orl	a,(_rDuoCycl + 1)
+      000238 FF               [12]  919 	mov	r7,a
+      000239 EE               [12]  920 	mov	a,r6
+      00023A F4               [12]  921 	cpl	a
+      00023B F5 90            [12]  922 	mov	_P1,a
+                                    923 ;	serial.c:100: if(rDuoCycl == 0xC0){
+      00023D 74 C0            [12]  924 	mov	a,#0xc0
+      00023F B5*19 06         [24]  925 	cjne	a,_rDuoCycl,00191$
+      000242 E4               [12]  926 	clr	a
+      000243 B5*1A 02         [24]  927 	cjne	a,(_rDuoCycl + 1),00191$
+      000246 80 02            [24]  928 	sjmp	00192$
+      000248                        929 00191$:
+      000248 80 1B            [24]  930 	sjmp	00118$
+      00024A                        931 00192$:
+                                    932 ;	serial.c:101: downDir = false;
+      00024A 75*1D 00         [24]  933 	mov	_downDir,#0x00
+                                    934 ;	serial.c:102: rDuoCycl = rDuoCycl >> 1;
+      00024D E5*1A            [12]  935 	mov	a,(_rDuoCycl + 1)
+      00024F C3               [12]  936 	clr	c
+      000250 13               [12]  937 	rrc	a
+      000251 C5*19            [12]  938 	xch	a,_rDuoCycl
+      000253 13               [12]  939 	rrc	a
+      000254 C5*19            [12]  940 	xch	a,_rDuoCycl
+      000256 F5*1A            [12]  941 	mov	(_rDuoCycl + 1),a
+                                    942 ;	serial.c:103: lDuoCycl = lDuoCycl << 1;
+      000258 E5*1B            [12]  943 	mov	a,_lDuoCycl
+      00025A 25*1B            [12]  944 	add	a,_lDuoCycl
+      00025C F5*1B            [12]  945 	mov	_lDuoCycl,a
+      00025E E5*1C            [12]  946 	mov	a,(_lDuoCycl + 1)
+      000260 33               [12]  947 	rlc	a
+      000261 F5*1C            [12]  948 	mov	(_lDuoCycl + 1),a
+      000263 80 64            [24]  949 	sjmp	00129$
+      000265                        950 00118$:
+                                    951 ;	serial.c:105: rDuoCycl = rDuoCycl << 1;
+      000265 E5*19            [12]  952 	mov	a,_rDuoCycl
+      000267 25*19            [12]  953 	add	a,_rDuoCycl
+      000269 F5*19            [12]  954 	mov	_rDuoCycl,a
+      00026B E5*1A            [12]  955 	mov	a,(_rDuoCycl + 1)
+      00026D 33               [12]  956 	rlc	a
+      00026E F5*1A            [12]  957 	mov	(_rDuoCycl + 1),a
+                                    958 ;	serial.c:106: lDuoCycl = lDuoCycl >> 1;
+      000270 E5*1C            [12]  959 	mov	a,(_lDuoCycl + 1)
+      000272 C3               [12]  960 	clr	c
+      000273 13               [12]  961 	rrc	a
+      000274 C5*1B            [12]  962 	xch	a,_lDuoCycl
+      000276 13               [12]  963 	rrc	a
+      000277 C5*1B            [12]  964 	xch	a,_lDuoCycl
+      000279 F5*1C            [12]  965 	mov	(_lDuoCycl + 1),a
+      00027B 80 4C            [24]  966 	sjmp	00129$
+      00027D                        967 00124$:
+                                    968 ;	serial.c:109: P1 = ~(rDuoCycl | lDuoCycl) & 0xFF;
+      00027D E5*1B            [12]  969 	mov	a,_lDuoCycl
+      00027F 45*19            [12]  970 	orl	a,_rDuoCycl
+      000281 FE               [12]  971 	mov	r6,a
+      000282 E5*1C            [12]  972 	mov	a,(_lDuoCycl + 1)
+      000284 45*1A            [12]  973 	orl	a,(_rDuoCycl + 1)
+      000286 FF               [12]  974 	mov	r7,a
+      000287 EE               [12]  975 	mov	a,r6
+      000288 F4               [12]  976 	cpl	a
+      000289 F5 90            [12]  977 	mov	_P1,a
+                                    978 ;	serial.c:110: if(rDuoCycl == 0x03){
+      00028B 74 03            [12]  979 	mov	a,#0x03
+      00028D B5*19 06         [24]  980 	cjne	a,_rDuoCycl,00193$
+      000290 E4               [12]  981 	clr	a
+      000291 B5*1A 02         [24]  982 	cjne	a,(_rDuoCycl + 1),00193$
+      000294 80 02            [24]  983 	sjmp	00194$
+      000296                        984 00193$:
+      000296 80 1B            [24]  985 	sjmp	00121$
+      000298                        986 00194$:
+                                    987 ;	serial.c:111: downDir = true;
+      000298 75*1D 01         [24]  988 	mov	_downDir,#0x01
+                                    989 ;	serial.c:112: rDuoCycl = rDuoCycl << 1;
+      00029B E5*19            [12]  990 	mov	a,_rDuoCycl
+      00029D 25*19            [12]  991 	add	a,_rDuoCycl
+      00029F F5*19            [12]  992 	mov	_rDuoCycl,a
+      0002A1 E5*1A            [12]  993 	mov	a,(_rDuoCycl + 1)
+      0002A3 33               [12]  994 	rlc	a
+      0002A4 F5*1A            [12]  995 	mov	(_rDuoCycl + 1),a
+                                    996 ;	serial.c:113: lDuoCycl = lDuoCycl >> 1;
+      0002A6 E5*1C            [12]  997 	mov	a,(_lDuoCycl + 1)
+      0002A8 C3               [12]  998 	clr	c
+      0002A9 13               [12]  999 	rrc	a
+      0002AA C5*1B            [12] 1000 	xch	a,_lDuoCycl
+      0002AC 13               [12] 1001 	rrc	a
+      0002AD C5*1B            [12] 1002 	xch	a,_lDuoCycl
+      0002AF F5*1C            [12] 1003 	mov	(_lDuoCycl + 1),a
+      0002B1 80 16            [24] 1004 	sjmp	00129$
+      0002B3                       1005 00121$:
+                                   1006 ;	serial.c:115: rDuoCycl = rDuoCycl >> 1;
+      0002B3 E5*1A            [12] 1007 	mov	a,(_rDuoCycl + 1)
+      0002B5 C3               [12] 1008 	clr	c
+      0002B6 13               [12] 1009 	rrc	a
+      0002B7 C5*19            [12] 1010 	xch	a,_rDuoCycl
+      0002B9 13               [12] 1011 	rrc	a
+      0002BA C5*19            [12] 1012 	xch	a,_rDuoCycl
+      0002BC F5*1A            [12] 1013 	mov	(_rDuoCycl + 1),a
+                                   1014 ;	serial.c:116: lDuoCycl = lDuoCycl << 1;
+      0002BE E5*1B            [12] 1015 	mov	a,_lDuoCycl
+      0002C0 25*1B            [12] 1016 	add	a,_lDuoCycl
+      0002C2 F5*1B            [12] 1017 	mov	_lDuoCycl,a
+      0002C4 E5*1C            [12] 1018 	mov	a,(_lDuoCycl + 1)
+      0002C6 33               [12] 1019 	rlc	a
+      0002C7 F5*1C            [12] 1020 	mov	(_lDuoCycl + 1),a
+                                   1021 ;	serial.c:122: }
+      0002C9                       1022 00129$:
+                                   1023 ;	serial.c:123: }
+      0002C9 D0 D0            [24] 1024 	pop	psw
+      0002CB D0 00            [24] 1025 	pop	(0+0)
+      0002CD D0 01            [24] 1026 	pop	(0+1)
+      0002CF D0 02            [24] 1027 	pop	(0+2)
+      0002D1 D0 03            [24] 1028 	pop	(0+3)
+      0002D3 D0 04            [24] 1029 	pop	(0+4)
+      0002D5 D0 05            [24] 1030 	pop	(0+5)
+      0002D7 D0 06            [24] 1031 	pop	(0+6)
+      0002D9 D0 07            [24] 1032 	pop	(0+7)
+      0002DB D0 83            [24] 1033 	pop	dph
+      0002DD D0 82            [24] 1034 	pop	dpl
+      0002DF D0 F0            [24] 1035 	pop	b
+      0002E1 D0 E0            [24] 1036 	pop	acc
+      0002E3 D0*00            [24] 1037 	pop	bits
+      0002E5 32               [24] 1038 	reti
+                                   1039 ;------------------------------------------------------------
+                                   1040 ;Allocation info for local variables in function 'clock'
+                                   1041 ;------------------------------------------------------------
+                                   1042 ;ctmp                      Allocated to registers r4 r5 r6 r7 
+                                   1043 ;------------------------------------------------------------
+                                   1044 ;	serial.c:125: unsigned long int clock(void)
+                                   1045 ;	-----------------------------------------
+                                   1046 ;	 function clock
+                                   1047 ;	-----------------------------------------
+      0002E6                       1048 _clock:
+                                   1049 ;	serial.c:129: do {
+      0002E6                       1050 00101$:
+                                   1051 ;	serial.c:130: clockupdate = false;
+      0002E6 75*0C 00         [24] 1052 	mov	_clockupdate,#0x00
+                                   1053 ;	serial.c:131: ctmp = clocktime;
+      0002E9 AC*08            [24] 1054 	mov	r4,_clocktime
+      0002EB AD*09            [24] 1055 	mov	r5,(_clocktime + 1)
+      0002ED AE*0A            [24] 1056 	mov	r6,(_clocktime + 2)
+      0002EF AF*0B            [24] 1057 	mov	r7,(_clocktime + 3)
+                                   1058 ;	serial.c:132: } while(clockupdate);
+      0002F1 E5*0C            [12] 1059 	mov	a,_clockupdate
+      0002F3 70 F1            [24] 1060 	jnz	00101$
+                                   1061 ;	serial.c:133: return (ctmp);
+      0002F5 8C 82            [24] 1062 	mov	dpl,r4
+      0002F7 8D 83            [24] 1063 	mov	dph,r5
+      0002F9 8E F0            [24] 1064 	mov	b,r6
+      0002FB EF               [12] 1065 	mov	a,r7
+                                   1066 ;	serial.c:134: }
+      0002FC 22               [24] 1067 	ret
+                                   1068 ;------------------------------------------------------------
+                                   1069 ;Allocation info for local variables in function 'putchar'
+                                   1070 ;------------------------------------------------------------
+                                   1071 ;c                         Allocated to registers r6 r7 
+                                   1072 ;------------------------------------------------------------
+                                   1073 ;	serial.c:136: int putchar(int c)
+                                   1074 ;	-----------------------------------------
+                                   1075 ;	 function putchar
+                                   1076 ;	-----------------------------------------
+      0002FD                       1077 _putchar:
+      0002FD AE 82            [24] 1078 	mov	r6,dpl
+      0002FF AF 83            [24] 1079 	mov	r7,dph
+                                   1080 ;	serial.c:138: while(!(SCON & 0x02));
+      000301                       1081 00101$:
+      000301 E5 98            [12] 1082 	mov	a,_SCON
+      000303 30 E1 FB         [24] 1083 	jnb	acc.1,00101$
+                                   1084 ;	serial.c:139: SCON &= ~0x02;
+      000306 53 98 FD         [24] 1085 	anl	_SCON,#0xfd
+                                   1086 ;	serial.c:140: SBUF = c;
+      000309 8E 99            [24] 1087 	mov	_SBUF,r6
+                                   1088 ;	serial.c:141: return (c);
+      00030B 8E 82            [24] 1089 	mov	dpl,r6
+      00030D 8F 83            [24] 1090 	mov	dph,r7
+                                   1091 ;	serial.c:142: }
+      00030F 22               [24] 1092 	ret
+                                   1093 ;------------------------------------------------------------
+                                   1094 ;Allocation info for local variables in function 'rollUnderNum'
+                                   1095 ;------------------------------------------------------------
+                                   1096 ;	serial.c:144: void rollUnderNum(){
+                                   1097 ;	-----------------------------------------
+                                   1098 ;	 function rollUnderNum
+                                   1099 ;	-----------------------------------------
+      000310                       1100 _rollUnderNum:
+                                   1101 ;	serial.c:145: if(displayNum[0] < 0){
+      000310 E5*01            [12] 1102 	mov	a,(_displayNum + 1)
+      000312 30 E7 13         [24] 1103 	jnb	acc.7,00102$
+                                   1104 ;	serial.c:146: displayNum[0] = 9;
+      000315 75*00 09         [24] 1105 	mov	(_displayNum + 0),#0x09
+      000318 75*01 00         [24] 1106 	mov	(_displayNum + 1),#0x00
+                                   1107 ;	serial.c:147: displayNum[1]--;
+      00031B AE*02            [24] 1108 	mov	r6,((_displayNum + 0x0002) + 0)
+      00031D AF*03            [24] 1109 	mov	r7,((_displayNum + 0x0002) + 1)
+      00031F 1E               [12] 1110 	dec	r6
+      000320 BE FF 01         [24] 1111 	cjne	r6,#0xff,00128$
+      000323 1F               [12] 1112 	dec	r7
+      000324                       1113 00128$:
+      000324 8E*02            [24] 1114 	mov	((_displayNum + 0x0002) + 0),r6
+      000326 8F*03            [24] 1115 	mov	((_displayNum + 0x0002) + 1),r7
+      000328                       1116 00102$:
+                                   1117 ;	serial.c:149: if(displayNum[1] < 0){
+      000328 E5*03            [12] 1118 	mov	a,((_displayNum + 0x0002) + 1)
+      00032A 30 E7 13         [24] 1119 	jnb	acc.7,00104$
+                                   1120 ;	serial.c:150: displayNum[1] = 9;
+      00032D 75*02 09         [24] 1121 	mov	((_displayNum + 0x0002) + 0),#0x09
+      000330 75*03 00         [24] 1122 	mov	((_displayNum + 0x0002) + 1),#0x00
+                                   1123 ;	serial.c:151: displayNum[2]--;
+      000333 AE*04            [24] 1124 	mov	r6,((_displayNum + 0x0004) + 0)
+      000335 AF*05            [24] 1125 	mov	r7,((_displayNum + 0x0004) + 1)
+      000337 1E               [12] 1126 	dec	r6
+      000338 BE FF 01         [24] 1127 	cjne	r6,#0xff,00130$
+      00033B 1F               [12] 1128 	dec	r7
+      00033C                       1129 00130$:
+      00033C 8E*04            [24] 1130 	mov	((_displayNum + 0x0004) + 0),r6
+      00033E 8F*05            [24] 1131 	mov	((_displayNum + 0x0004) + 1),r7
+      000340                       1132 00104$:
+                                   1133 ;	serial.c:153: if(displayNum[2] < 0){
+      000340 E5*05            [12] 1134 	mov	a,((_displayNum + 0x0004) + 1)
+      000342 30 E7 13         [24] 1135 	jnb	acc.7,00106$
+                                   1136 ;	serial.c:154: displayNum[2] = 9;
+      000345 75*04 09         [24] 1137 	mov	((_displayNum + 0x0004) + 0),#0x09
+      000348 75*05 00         [24] 1138 	mov	((_displayNum + 0x0004) + 1),#0x00
+                                   1139 ;	serial.c:155: displayNum[3]--;
+      00034B AE*06            [24] 1140 	mov	r6,((_displayNum + 0x0006) + 0)
+      00034D AF*07            [24] 1141 	mov	r7,((_displayNum + 0x0006) + 1)
+      00034F 1E               [12] 1142 	dec	r6
+      000350 BE FF 01         [24] 1143 	cjne	r6,#0xff,00132$
+      000353 1F               [12] 1144 	dec	r7
+      000354                       1145 00132$:
+      000354 8E*06            [24] 1146 	mov	((_displayNum + 0x0006) + 0),r6
+      000356 8F*07            [24] 1147 	mov	((_displayNum + 0x0006) + 1),r7
+      000358                       1148 00106$:
+                                   1149 ;	serial.c:157: if(displayNum[3] < 0){
+      000358 E5*07            [12] 1150 	mov	a,((_displayNum + 0x0006) + 1)
+      00035A 30 E7 18         [24] 1151 	jnb	acc.7,00109$
+                                   1152 ;	serial.c:158: displayNum[0] = 9;
+      00035D 75*00 09         [24] 1153 	mov	(_displayNum + 0),#0x09
+      000360 75*01 00         [24] 1154 	mov	(_displayNum + 1),#0x00
+                                   1155 ;	serial.c:159: displayNum[1] = 9;
+      000363 75*02 09         [24] 1156 	mov	((_displayNum + 0x0002) + 0),#0x09
+      000366 75*03 00         [24] 1157 	mov	((_displayNum + 0x0002) + 1),#0x00
+                                   1158 ;	serial.c:160: displayNum[2] = 9;
+      000369 75*04 09         [24] 1159 	mov	((_displayNum + 0x0004) + 0),#0x09
+      00036C 75*05 00         [24] 1160 	mov	((_displayNum + 0x0004) + 1),#0x00
+                                   1161 ;	serial.c:161: displayNum[3] = 9;
+      00036F 75*06 09         [24] 1162 	mov	((_displayNum + 0x0006) + 0),#0x09
+      000372 75*07 00         [24] 1163 	mov	((_displayNum + 0x0006) + 1),#0x00
+      000375                       1164 00109$:
+                                   1165 ;	serial.c:163: }
+      000375 22               [24] 1166 	ret
+                                   1167 ;------------------------------------------------------------
+                                   1168 ;Allocation info for local variables in function 'rollOverNum'
+                                   1169 ;------------------------------------------------------------
+                                   1170 ;	serial.c:165: void rollOverNum(){
+                                   1171 ;	-----------------------------------------
+                                   1172 ;	 function rollOverNum
+                                   1173 ;	-----------------------------------------
+      000376                       1174 _rollOverNum:
+                                   1175 ;	serial.c:166: if(displayNum[0] > 9){
+      000376 C3               [12] 1176 	clr	c
+      000377 74 09            [12] 1177 	mov	a,#0x09
+      000379 95*00            [12] 1178 	subb	a,_displayNum
+      00037B 74 80            [12] 1179 	mov	a,#(0x00 ^ 0x80)
+      00037D 85*01 F0         [24] 1180 	mov	b,(_displayNum + 1)
+      000380 63 F0 80         [24] 1181 	xrl	b,#0x80
+      000383 95 F0            [12] 1182 	subb	a,b
+      000385 50 12            [24] 1183 	jnc	00102$
+                                   1184 ;	serial.c:167: displayNum[0] = 0;
+      000387 E4               [12] 1185 	clr	a
+      000388 F5*00            [12] 1186 	mov	(_displayNum + 0),a
+      00038A F5*01            [12] 1187 	mov	(_displayNum + 1),a
+                                   1188 ;	serial.c:168: displayNum[1]++;
+      00038C AE*02            [24] 1189 	mov	r6,((_displayNum + 0x0002) + 0)
+      00038E AF*03            [24] 1190 	mov	r7,((_displayNum + 0x0002) + 1)
+      000390 0E               [12] 1191 	inc	r6
+      000391 BE 00 01         [24] 1192 	cjne	r6,#0x00,00128$
+      000394 0F               [12] 1193 	inc	r7
+      000395                       1194 00128$:
+      000395 8E*02            [24] 1195 	mov	((_displayNum + 0x0002) + 0),r6
+      000397 8F*03            [24] 1196 	mov	((_displayNum + 0x0002) + 1),r7
+      000399                       1197 00102$:
+                                   1198 ;	serial.c:170: if(displayNum[1] > 9){
+      000399 C3               [12] 1199 	clr	c
+      00039A 74 09            [12] 1200 	mov	a,#0x09
+      00039C 95*02            [12] 1201 	subb	a,(_displayNum + 0x0002)
+      00039E 74 80            [12] 1202 	mov	a,#(0x00 ^ 0x80)
+      0003A0 85*03 F0         [24] 1203 	mov	b,((_displayNum + 0x0002) + 1)
+      0003A3 63 F0 80         [24] 1204 	xrl	b,#0x80
+      0003A6 95 F0            [12] 1205 	subb	a,b
+      0003A8 50 12            [24] 1206 	jnc	00104$
+                                   1207 ;	serial.c:171: displayNum[1] = 0;
+      0003AA E4               [12] 1208 	clr	a
+      0003AB F5*02            [12] 1209 	mov	((_displayNum + 0x0002) + 0),a
+      0003AD F5*03            [12] 1210 	mov	((_displayNum + 0x0002) + 1),a
+                                   1211 ;	serial.c:172: displayNum[2]++;
+      0003AF AE*04            [24] 1212 	mov	r6,((_displayNum + 0x0004) + 0)
+      0003B1 AF*05            [24] 1213 	mov	r7,((_displayNum + 0x0004) + 1)
+      0003B3 0E               [12] 1214 	inc	r6
+      0003B4 BE 00 01         [24] 1215 	cjne	r6,#0x00,00130$
+      0003B7 0F               [12] 1216 	inc	r7
+      0003B8                       1217 00130$:
+      0003B8 8E*04            [24] 1218 	mov	((_displayNum + 0x0004) + 0),r6
+      0003BA 8F*05            [24] 1219 	mov	((_displayNum + 0x0004) + 1),r7
+      0003BC                       1220 00104$:
+                                   1221 ;	serial.c:174: if(displayNum[2] > 9){
+      0003BC C3               [12] 1222 	clr	c
+      0003BD 74 09            [12] 1223 	mov	a,#0x09
+      0003BF 95*04            [12] 1224 	subb	a,(_displayNum + 0x0004)
+      0003C1 74 80            [12] 1225 	mov	a,#(0x00 ^ 0x80)
+      0003C3 85*05 F0         [24] 1226 	mov	b,((_displayNum + 0x0004) + 1)
+      0003C6 63 F0 80         [24] 1227 	xrl	b,#0x80
+      0003C9 95 F0            [12] 1228 	subb	a,b
+      0003CB 50 12            [24] 1229 	jnc	00106$
+                                   1230 ;	serial.c:175: displayNum[2] = 0;
+      0003CD E4               [12] 1231 	clr	a
+      0003CE F5*04            [12] 1232 	mov	((_displayNum + 0x0004) + 0),a
+      0003D0 F5*05            [12] 1233 	mov	((_displayNum + 0x0004) + 1),a
+                                   1234 ;	serial.c:176: displayNum[3]++;
+      0003D2 AE*06            [24] 1235 	mov	r6,((_displayNum + 0x0006) + 0)
+      0003D4 AF*07            [24] 1236 	mov	r7,((_displayNum + 0x0006) + 1)
+      0003D6 0E               [12] 1237 	inc	r6
+      0003D7 BE 00 01         [24] 1238 	cjne	r6,#0x00,00132$
+      0003DA 0F               [12] 1239 	inc	r7
+      0003DB                       1240 00132$:
+      0003DB 8E*06            [24] 1241 	mov	((_displayNum + 0x0006) + 0),r6
+      0003DD 8F*07            [24] 1242 	mov	((_displayNum + 0x0006) + 1),r7
+      0003DF                       1243 00106$:
+                                   1244 ;	serial.c:178: if(displayNum[3] > 9){
+      0003DF C3               [12] 1245 	clr	c
+      0003E0 74 09            [12] 1246 	mov	a,#0x09
+      0003E2 95*06            [12] 1247 	subb	a,(_displayNum + 0x0006)
+      0003E4 74 80            [12] 1248 	mov	a,#(0x00 ^ 0x80)
+      0003E6 85*07 F0         [24] 1249 	mov	b,((_displayNum + 0x0006) + 1)
+      0003E9 63 F0 80         [24] 1250 	xrl	b,#0x80
+      0003EC 95 F0            [12] 1251 	subb	a,b
+      0003EE 50 11            [24] 1252 	jnc	00109$
+                                   1253 ;	serial.c:179: displayNum[0] = 0;
+      0003F0 E4               [12] 1254 	clr	a
+      0003F1 F5*00            [12] 1255 	mov	(_displayNum + 0),a
+      0003F3 F5*01            [12] 1256 	mov	(_displayNum + 1),a
+                                   1257 ;	serial.c:180: displayNum[1] = 0;
+      0003F5 F5*02            [12] 1258 	mov	((_displayNum + 0x0002) + 0),a
+      0003F7 F5*03            [12] 1259 	mov	((_displayNum + 0x0002) + 1),a
+                                   1260 ;	serial.c:181: displayNum[2] = 0;
+      0003F9 F5*04            [12] 1261 	mov	((_displayNum + 0x0004) + 0),a
+      0003FB F5*05            [12] 1262 	mov	((_displayNum + 0x0004) + 1),a
+                                   1263 ;	serial.c:182: displayNum[3] = 0;
+      0003FD F5*06            [12] 1264 	mov	((_displayNum + 0x0006) + 0),a
+      0003FF F5*07            [12] 1265 	mov	((_displayNum + 0x0006) + 1),a
+      000401                       1266 00109$:
+                                   1267 ;	serial.c:184: }
+      000401 22               [24] 1268 	ret
+                                   1269 ;------------------------------------------------------------
+                                   1270 ;Allocation info for local variables in function 'i2c_start'
+                                   1271 ;------------------------------------------------------------
+                                   1272 ;	serial.c:186: void i2c_start(void)
+                                   1273 ;	-----------------------------------------
+                                   1274 ;	 function i2c_start
+                                   1275 ;	-----------------------------------------
+      000402                       1276 _i2c_start:
+                                   1277 ;	serial.c:188: SDA = 1;
+                                   1278 ;	assignBit
+      000402 D2 A7            [12] 1279 	setb	_P2_7
+                                   1280 ;	serial.c:189: SCL = 1;
+                                   1281 ;	assignBit
+      000404 D2 A6            [12] 1282 	setb	_P2_6
+                                   1283 ;	serial.c:190: SDA = 0;
+                                   1284 ;	assignBit
+      000406 C2 A7            [12] 1285 	clr	_P2_7
+                                   1286 ;	serial.c:191: SCL = 0;
+                                   1287 ;	assignBit
+      000408 C2 A6            [12] 1288 	clr	_P2_6
+                                   1289 ;	serial.c:192: }
+      00040A 22               [24] 1290 	ret
+                                   1291 ;------------------------------------------------------------
+                                   1292 ;Allocation info for local variables in function 'i2c_stop'
+                                   1293 ;------------------------------------------------------------
+                                   1294 ;	serial.c:194: void i2c_stop(void)
+                                   1295 ;	-----------------------------------------
+                                   1296 ;	 function i2c_stop
+                                   1297 ;	-----------------------------------------
+      00040B                       1298 _i2c_stop:
+                                   1299 ;	serial.c:196: SDA = 0;
+                                   1300 ;	assignBit
+      00040B C2 A7            [12] 1301 	clr	_P2_7
+                                   1302 ;	serial.c:197: SCL = 1;
+                                   1303 ;	assignBit
+      00040D D2 A6            [12] 1304 	setb	_P2_6
+                                   1305 ;	serial.c:198: SDA = 1;
+                                   1306 ;	assignBit
+      00040F D2 A7            [12] 1307 	setb	_P2_7
+                                   1308 ;	serial.c:199: SCL = 0;
+                                   1309 ;	assignBit
+      000411 C2 A6            [12] 1310 	clr	_P2_6
+                                   1311 ;	serial.c:200: }
+      000413 22               [24] 1312 	ret
+                                   1313 ;------------------------------------------------------------
+                                   1314 ;Allocation info for local variables in function 'i2c_ack'
+                                   1315 ;------------------------------------------------------------
+                                   1316 ;	serial.c:202: void i2c_ack(void)
+                                   1317 ;	-----------------------------------------
+                                   1318 ;	 function i2c_ack
+                                   1319 ;	-----------------------------------------
+      000414                       1320 _i2c_ack:
+                                   1321 ;	serial.c:204: SCL = 0;
+                                   1322 ;	assignBit
+      000414 C2 A6            [12] 1323 	clr	_P2_6
+                                   1324 ;	serial.c:205: SDA = 1;
+                                   1325 ;	assignBit
+      000416 D2 A7            [12] 1326 	setb	_P2_7
+                                   1327 ;	serial.c:206: SCL = 1;
+                                   1328 ;	assignBit
+      000418 D2 A6            [12] 1329 	setb	_P2_6
+                                   1330 ;	serial.c:208: }
+      00041A 22               [24] 1331 	ret
+                                   1332 ;------------------------------------------------------------
+                                   1333 ;Allocation info for local variables in function 'i2c_write'
+                                   1334 ;------------------------------------------------------------
+                                   1335 ;data                      Allocated to registers r7 
+                                   1336 ;i                         Allocated to registers r6 
+                                   1337 ;------------------------------------------------------------
+                                   1338 ;	serial.c:210: void i2c_write(unsigned char data){
+                                   1339 ;	-----------------------------------------
+                                   1340 ;	 function i2c_write
+                                   1341 ;	-----------------------------------------
+      00041B                       1342 _i2c_write:
+      00041B AF 82            [24] 1343 	mov	r7,dpl
+                                   1344 ;	serial.c:213: for(i = 0; i < 8; i++){
+      00041D 7E 00            [12] 1345 	mov	r6,#0x00
+      00041F                       1346 00102$:
+                                   1347 ;	serial.c:214: SDA = (data & 0x80)>>7;
+      00041F 74 80            [12] 1348 	mov	a,#0x80
+      000421 5F               [12] 1349 	anl	a,r7
+      000422 23               [12] 1350 	rl	a
+      000423 54 01            [12] 1351 	anl	a,#0x01
+                                   1352 ;	assignBit
+      000425 24 FF            [12] 1353 	add	a,#0xff
+      000427 92 A7            [24] 1354 	mov	_P2_7,c
+                                   1355 ;	serial.c:215: SCL = 1;
+                                   1356 ;	assignBit
+      000429 D2 A6            [12] 1357 	setb	_P2_6
+                                   1358 ;	serial.c:216: SCL = 0;
+                                   1359 ;	assignBit
+      00042B C2 A6            [12] 1360 	clr	_P2_6
+                                   1361 ;	serial.c:217: data <<= 1;
+      00042D 8F 05            [24] 1362 	mov	ar5,r7
+      00042F ED               [12] 1363 	mov	a,r5
+      000430 2D               [12] 1364 	add	a,r5
+      000431 FF               [12] 1365 	mov	r7,a
+                                   1366 ;	serial.c:213: for(i = 0; i < 8; i++){
+      000432 0E               [12] 1367 	inc	r6
+      000433 BE 08 00         [24] 1368 	cjne	r6,#0x08,00115$
+      000436                       1369 00115$:
+      000436 40 E7            [24] 1370 	jc	00102$
+                                   1371 ;	serial.c:219: SDA = 1;
+                                   1372 ;	assignBit
+      000438 D2 A7            [12] 1373 	setb	_P2_7
+                                   1374 ;	serial.c:220: SCL = 1;
+                                   1375 ;	assignBit
+      00043A D2 A6            [12] 1376 	setb	_P2_6
+                                   1377 ;	serial.c:221: SCL = 0;
+                                   1378 ;	assignBit
+      00043C C2 A6            [12] 1379 	clr	_P2_6
+                                   1380 ;	serial.c:222: }
+      00043E 22               [24] 1381 	ret
+                                   1382 ;------------------------------------------------------------
+                                   1383 ;Allocation info for local variables in function 'i2c_read'
+                                   1384 ;------------------------------------------------------------
+                                   1385 ;i                         Allocated to registers r6 
+                                   1386 ;data                      Allocated to registers r5 
+                                   1387 ;------------------------------------------------------------
+                                   1388 ;	serial.c:224: unsigned char i2c_read(void){
+                                   1389 ;	-----------------------------------------
+                                   1390 ;	 function i2c_read
+                                   1391 ;	-----------------------------------------
+      00043F                       1392 _i2c_read:
+                                   1393 ;	serial.c:225: unsigned char i, data = 0;
+      00043F 7F 00            [12] 1394 	mov	r7,#0x00
+                                   1395 ;	serial.c:227: for(i = 0; i < 8; i++){
+      000441 7E 00            [12] 1396 	mov	r6,#0x00
+      000443                       1397 00102$:
+                                   1398 ;	serial.c:228: SCL = 1;
+                                   1399 ;	assignBit
+      000443 D2 A6            [12] 1400 	setb	_P2_6
+                                   1401 ;	serial.c:229: data <<= 1;
+      000445 8F 05            [24] 1402 	mov	ar5,r7
+      000447 ED               [12] 1403 	mov	a,r5
+      000448 2D               [12] 1404 	add	a,r5
+      000449 FD               [12] 1405 	mov	r5,a
+                                   1406 ;	serial.c:230: data |= SDA;
+      00044A A2 A7            [12] 1407 	mov	c,_P2_7
+      00044C E4               [12] 1408 	clr	a
+      00044D 33               [12] 1409 	rlc	a
+      00044E 4D               [12] 1410 	orl	a,r5
+      00044F FF               [12] 1411 	mov	r7,a
+                                   1412 ;	serial.c:231: SCL = 0;
+                                   1413 ;	assignBit
+      000450 C2 A6            [12] 1414 	clr	_P2_6
+                                   1415 ;	serial.c:227: for(i = 0; i < 8; i++){
+      000452 0E               [12] 1416 	inc	r6
+      000453 BE 08 00         [24] 1417 	cjne	r6,#0x08,00117$
+      000456                       1418 00117$:
+      000456 40 EB            [24] 1419 	jc	00102$
+                                   1420 ;	serial.c:233: SDA = 0;
+                                   1421 ;	assignBit
+      000458 C2 A7            [12] 1422 	clr	_P2_7
+                                   1423 ;	serial.c:234: SCL = 1;
+                                   1424 ;	assignBit
+      00045A D2 A6            [12] 1425 	setb	_P2_6
+                                   1426 ;	serial.c:235: SCL = 0;
+                                   1427 ;	assignBit
+      00045C C2 A6            [12] 1428 	clr	_P2_6
+                                   1429 ;	serial.c:236: SDA = 1;
+                                   1430 ;	assignBit
+      00045E D2 A7            [12] 1431 	setb	_P2_7
+                                   1432 ;	serial.c:237: return data;
+      000460 8F 82            [24] 1433 	mov	dpl,r7
+                                   1434 ;	serial.c:238: }
+      000462 22               [24] 1435 	ret
+                                   1436 ;------------------------------------------------------------
+                                   1437 ;Allocation info for local variables in function 'i2c_buttons'
+                                   1438 ;------------------------------------------------------------
+                                   1439 ;buttons                   Allocated to registers r7 
+                                   1440 ;leds                      Allocated to registers r7 
+                                   1441 ;button1                   Allocated to registers r5 
+                                   1442 ;button2                   Allocated to registers r4 
+                                   1443 ;button3                   Allocated to registers r3 
+                                   1444 ;button4                   Allocated to registers r6 
+                                   1445 ;------------------------------------------------------------
+                                   1446 ;	serial.c:240: void i2c_buttons(void){
+                                   1447 ;	-----------------------------------------
+                                   1448 ;	 function i2c_buttons
+                                   1449 ;	-----------------------------------------
+      000463                       1450 _i2c_buttons:
+                                   1451 ;	serial.c:247: i2c_start();
+      000463 12r04r02         [24] 1452 	lcall	_i2c_start
+                                   1453 ;	serial.c:248: i2c_write(0x40 | 1);
+      000466 75 82 41         [24] 1454 	mov	dpl,#0x41
+      000469 12r04r1B         [24] 1455 	lcall	_i2c_write
+                                   1456 ;	serial.c:249: buttons = ~i2c_read();
+      00046C 12r04r3F         [24] 1457 	lcall	_i2c_read
+      00046F E5 82            [12] 1458 	mov	a,dpl
+      000471 F4               [12] 1459 	cpl	a
+      000472 FF               [12] 1460 	mov	r7,a
+                                   1461 ;	serial.c:250: i2c_stop();
+      000473 C0 07            [24] 1462 	push	ar7
+      000475 12r04r0B         [24] 1463 	lcall	_i2c_stop
+      000478 D0 07            [24] 1464 	pop	ar7
+                                   1465 ;	serial.c:253: button1 = (buttons & 0x10) ? 1 : 0;
+      00047A EF               [12] 1466 	mov	a,r7
+      00047B 30 E4 06         [24] 1467 	jnb	acc.4,00111$
+      00047E 7D 01            [12] 1468 	mov	r5,#0x01
+      000480 7E 00            [12] 1469 	mov	r6,#0x00
+      000482 80 04            [24] 1470 	sjmp	00112$
+      000484                       1471 00111$:
+      000484 7D 00            [12] 1472 	mov	r5,#0x00
+      000486 7E 00            [12] 1473 	mov	r6,#0x00
+      000488                       1474 00112$:
+                                   1475 ;	serial.c:254: button2 = (buttons & 0x20) ? 1 : 0;
+      000488 EF               [12] 1476 	mov	a,r7
+      000489 30 E5 06         [24] 1477 	jnb	acc.5,00113$
+      00048C 7C 01            [12] 1478 	mov	r4,#0x01
+      00048E 7E 00            [12] 1479 	mov	r6,#0x00
+      000490 80 04            [24] 1480 	sjmp	00114$
+      000492                       1481 00113$:
+      000492 7C 00            [12] 1482 	mov	r4,#0x00
+      000494 7E 00            [12] 1483 	mov	r6,#0x00
+      000496                       1484 00114$:
+                                   1485 ;	serial.c:255: button3 = (buttons & 0x40) ? 1 : 0;
+      000496 EF               [12] 1486 	mov	a,r7
+      000497 30 E6 06         [24] 1487 	jnb	acc.6,00115$
+      00049A 7B 01            [12] 1488 	mov	r3,#0x01
+      00049C 7E 00            [12] 1489 	mov	r6,#0x00
+      00049E 80 04            [24] 1490 	sjmp	00116$
+      0004A0                       1491 00115$:
+      0004A0 7B 00            [12] 1492 	mov	r3,#0x00
+      0004A2 7E 00            [12] 1493 	mov	r6,#0x00
+      0004A4                       1494 00116$:
+                                   1495 ;	serial.c:256: button4 = (buttons & 0x80) ? 1 : 0;	
+      0004A4 EF               [12] 1496 	mov	a,r7
+      0004A5 30 E7 06         [24] 1497 	jnb	acc.7,00117$
+      0004A8 7E 01            [12] 1498 	mov	r6,#0x01
+      0004AA 7F 00            [12] 1499 	mov	r7,#0x00
+      0004AC 80 04            [24] 1500 	sjmp	00118$
+      0004AE                       1501 00117$:
+      0004AE 7E 00            [12] 1502 	mov	r6,#0x00
+      0004B0 7F 00            [12] 1503 	mov	r7,#0x00
+      0004B2                       1504 00118$:
+                                   1505 ;	serial.c:257: leds = 0x00;
+      0004B2 7F 00            [12] 1506 	mov	r7,#0x00
+                                   1507 ;	serial.c:258: if(button1) leds |= 0x01;
+      0004B4 ED               [12] 1508 	mov	a,r5
+      0004B5 60 02            [24] 1509 	jz	00102$
+      0004B7 7F 01            [12] 1510 	mov	r7,#0x01
+      0004B9                       1511 00102$:
+                                   1512 ;	serial.c:259: if(button2) leds |= 0x02;
+      0004B9 EC               [12] 1513 	mov	a,r4
+      0004BA 60 09            [24] 1514 	jz	00104$
+      0004BC 8F 04            [24] 1515 	mov	ar4,r7
+      0004BE 7D 00            [12] 1516 	mov	r5,#0x00
+      0004C0 43 04 02         [24] 1517 	orl	ar4,#0x02
+      0004C3 8C 07            [24] 1518 	mov	ar7,r4
+      0004C5                       1519 00104$:
+                                   1520 ;	serial.c:260: if(button3) leds |= 0x04;
+      0004C5 EB               [12] 1521 	mov	a,r3
+      0004C6 60 09            [24] 1522 	jz	00106$
+      0004C8 8F 04            [24] 1523 	mov	ar4,r7
+      0004CA 7D 00            [12] 1524 	mov	r5,#0x00
+      0004CC 43 04 04         [24] 1525 	orl	ar4,#0x04
+      0004CF 8C 07            [24] 1526 	mov	ar7,r4
+      0004D1                       1527 00106$:
+                                   1528 ;	serial.c:261: if(button4) leds |= 0x08;
+      0004D1 EE               [12] 1529 	mov	a,r6
+      0004D2 60 09            [24] 1530 	jz	00108$
+      0004D4 8F 05            [24] 1531 	mov	ar5,r7
+      0004D6 7E 00            [12] 1532 	mov	r6,#0x00
+      0004D8 43 05 08         [24] 1533 	orl	ar5,#0x08
+      0004DB 8D 07            [24] 1534 	mov	ar7,r5
+      0004DD                       1535 00108$:
+                                   1536 ;	serial.c:262: leds = ~leds;
+      0004DD EF               [12] 1537 	mov	a,r7
+      0004DE F4               [12] 1538 	cpl	a
+      0004DF FF               [12] 1539 	mov	r7,a
+                                   1540 ;	serial.c:265: i2c_start();
+      0004E0 C0 07            [24] 1541 	push	ar7
+      0004E2 12r04r02         [24] 1542 	lcall	_i2c_start
+                                   1543 ;	serial.c:266: i2c_write(0x40);
+      0004E5 75 82 40         [24] 1544 	mov	dpl,#0x40
+      0004E8 12r04r1B         [24] 1545 	lcall	_i2c_write
+      0004EB D0 07            [24] 1546 	pop	ar7
+                                   1547 ;	serial.c:267: i2c_write(leds);
+      0004ED 8F 82            [24] 1548 	mov	dpl,r7
+      0004EF 12r04r1B         [24] 1549 	lcall	_i2c_write
+                                   1550 ;	serial.c:268: i2c_stop();
+                                   1551 ;	serial.c:270: }
+      0004F2 02r04r0B         [24] 1552 	ljmp	_i2c_stop
+                                   1553 ;------------------------------------------------------------
+                                   1554 ;Allocation info for local variables in function 'lcd_slave'
+                                   1555 ;------------------------------------------------------------
+                                   1556 ;slave                     Allocated to registers 
+                                   1557 ;------------------------------------------------------------
+                                   1558 ;	serial.c:272: void lcd_slave(unsigned char slave)
+                                   1559 ;	-----------------------------------------
+                                   1560 ;	 function lcd_slave
+                                   1561 ;	-----------------------------------------
+      0004F5                       1562 _lcd_slave:
+      0004F5 85 82*23         [24] 1563 	mov	_slave_add,dpl
+                                   1564 ;	serial.c:274: slave_add=slave;
+                                   1565 ;	serial.c:275: }
+      0004F8 22               [24] 1566 	ret
+                                   1567 ;------------------------------------------------------------
+                                   1568 ;Allocation info for local variables in function 'lcd_write_byte'
+                                   1569 ;------------------------------------------------------------
+                                   1570 ;data                      Allocated to registers r7 
+                                   1571 ;i                         Allocated to registers r6 
+                                   1572 ;------------------------------------------------------------
+                                   1573 ;	serial.c:277: void lcd_write_byte(unsigned char data){
+                                   1574 ;	-----------------------------------------
+                                   1575 ;	 function lcd_write_byte
+                                   1576 ;	-----------------------------------------
+      0004F9                       1577 _lcd_write_byte:
+      0004F9 AF 82            [24] 1578 	mov	r7,dpl
+                                   1579 ;	serial.c:279: for(i=0;i<8;i++){
+      0004FB 7E 00            [12] 1580 	mov	r6,#0x00
+      0004FD                       1581 00102$:
+                                   1582 ;	serial.c:280: SCL = 0;
+                                   1583 ;	assignBit
+      0004FD C2 A6            [12] 1584 	clr	_P2_6
+                                   1585 ;	serial.c:281: SDA = (data&(0x80)>>i)?1:0;
+      0004FF 8E F0            [24] 1586 	mov	b,r6
+      000501 05 F0            [12] 1587 	inc	b
+      000503 7C 80            [12] 1588 	mov	r4,#0x80
+      000505 E4               [12] 1589 	clr	a
+      000506 FD               [12] 1590 	mov	r5,a
+      000507 33               [12] 1591 	rlc	a
+      000508 92 D2            [24] 1592 	mov	ov,c
+      00050A 80 08            [24] 1593 	sjmp	00112$
+      00050C                       1594 00111$:
+      00050C A2 D2            [12] 1595 	mov	c,ov
+      00050E ED               [12] 1596 	mov	a,r5
+      00050F 13               [12] 1597 	rrc	a
+      000510 FD               [12] 1598 	mov	r5,a
+      000511 EC               [12] 1599 	mov	a,r4
+      000512 13               [12] 1600 	rrc	a
+      000513 FC               [12] 1601 	mov	r4,a
+      000514                       1602 00112$:
+      000514 D5 F0 F5         [24] 1603 	djnz	b,00111$
+      000517 8F 02            [24] 1604 	mov	ar2,r7
+      000519 7B 00            [12] 1605 	mov	r3,#0x00
+      00051B EA               [12] 1606 	mov	a,r2
+      00051C 52 04            [12] 1607 	anl	ar4,a
+      00051E EB               [12] 1608 	mov	a,r3
+      00051F 52 05            [12] 1609 	anl	ar5,a
+                                   1610 ;	assignBit
+      000521 EC               [12] 1611 	mov	a,r4
+      000522 4D               [12] 1612 	orl	a,r5
+      000523 24 FF            [12] 1613 	add	a,#0xff
+      000525 92 A7            [24] 1614 	mov	_P2_7,c
+                                   1615 ;	serial.c:282: SCL = 1;
+                                   1616 ;	assignBit
+      000527 D2 A6            [12] 1617 	setb	_P2_6
+                                   1618 ;	serial.c:279: for(i=0;i<8;i++){
+      000529 0E               [12] 1619 	inc	r6
+      00052A BE 08 00         [24] 1620 	cjne	r6,#0x08,00113$
+      00052D                       1621 00113$:
+      00052D 40 CE            [24] 1622 	jc	00102$
+                                   1623 ;	serial.c:284: }
+      00052F 22               [24] 1624 	ret
+                                   1625 ;------------------------------------------------------------
+                                   1626 ;Allocation info for local variables in function 'lcd_send_cmd'
+                                   1627 ;------------------------------------------------------------
+                                   1628 ;cmd                       Allocated to registers r7 
+                                   1629 ;cmd_l                     Allocated to registers r6 
+                                   1630 ;cmd_u                     Allocated to registers r7 
+                                   1631 ;------------------------------------------------------------
+                                   1632 ;	serial.c:286: void lcd_send_cmd(unsigned char cmd) {
+                                   1633 ;	-----------------------------------------
+                                   1634 ;	 function lcd_send_cmd
+                                   1635 ;	-----------------------------------------
+      000530                       1636 _lcd_send_cmd:
+      000530 AF 82            [24] 1637 	mov	r7,dpl
+                                   1638 ;	serial.c:288: cmd_l=(cmd<<4)&0xf0;
+      000532 8F 06            [24] 1639 	mov	ar6,r7
+      000534 EE               [12] 1640 	mov	a,r6
+      000535 C4               [12] 1641 	swap	a
+      000536 54 F0            [12] 1642 	anl	a,#0xf0
+      000538 FE               [12] 1643 	mov	r6,a
+      000539 53 06 F0         [24] 1644 	anl	ar6,#0xf0
+                                   1645 ;	serial.c:289: cmd_u=(cmd &0xf0);
+      00053C 53 07 F0         [24] 1646 	anl	ar7,#0xf0
+                                   1647 ;	serial.c:290: i2c_start();
+      00053F C0 07            [24] 1648 	push	ar7
+      000541 C0 06            [24] 1649 	push	ar6
+      000543 12r04r02         [24] 1650 	lcall	_i2c_start
+                                   1651 ;	serial.c:291: lcd_write_byte(slave_add);
+      000546 85*23 82         [24] 1652 	mov	dpl,_slave_add
+      000549 12r04rF9         [24] 1653 	lcall	_lcd_write_byte
+                                   1654 ;	serial.c:292: i2c_ack();
+      00054C 12r04r14         [24] 1655 	lcall	_i2c_ack
+      00054F D0 06            [24] 1656 	pop	ar6
+      000551 D0 07            [24] 1657 	pop	ar7
+                                   1658 ;	serial.c:293: lcd_write_byte(cmd_u|0x0C);
+      000553 7D 00            [12] 1659 	mov	r5,#0x00
+      000555 74 0C            [12] 1660 	mov	a,#0x0c
+      000557 4F               [12] 1661 	orl	a,r7
+      000558 FB               [12] 1662 	mov	r3,a
+      000559 8D 04            [24] 1663 	mov	ar4,r5
+      00055B 8B 82            [24] 1664 	mov	dpl,r3
+      00055D C0 07            [24] 1665 	push	ar7
+      00055F C0 06            [24] 1666 	push	ar6
+      000561 C0 05            [24] 1667 	push	ar5
+      000563 12r04rF9         [24] 1668 	lcall	_lcd_write_byte
+                                   1669 ;	serial.c:294: i2c_ack();
+      000566 12r04r14         [24] 1670 	lcall	_i2c_ack
+                                   1671 ;	serial.c:295: delay(1);
+      000569 90 00 01         [24] 1672 	mov	dptr,#0x0001
+      00056C 12r00r00         [24] 1673 	lcall	_delay
+      00056F D0 05            [24] 1674 	pop	ar5
+      000571 D0 06            [24] 1675 	pop	ar6
+      000573 D0 07            [24] 1676 	pop	ar7
+                                   1677 ;	serial.c:296: lcd_write_byte(cmd_u|0x08);
+      000575 43 07 08         [24] 1678 	orl	ar7,#0x08
+      000578 8F 82            [24] 1679 	mov	dpl,r7
+      00057A C0 06            [24] 1680 	push	ar6
+      00057C 12r04rF9         [24] 1681 	lcall	_lcd_write_byte
+                                   1682 ;	serial.c:297: i2c_ack();
+      00057F 12r04r14         [24] 1683 	lcall	_i2c_ack
+                                   1684 ;	serial.c:298: delay(10);
+      000582 90 00 0A         [24] 1685 	mov	dptr,#0x000a
+      000585 12r00r00         [24] 1686 	lcall	_delay
+      000588 D0 06            [24] 1687 	pop	ar6
+                                   1688 ;	serial.c:299: lcd_write_byte(cmd_l|0x0C);
+      00058A 7F 00            [12] 1689 	mov	r7,#0x00
+      00058C 74 0C            [12] 1690 	mov	a,#0x0c
+      00058E 4E               [12] 1691 	orl	a,r6
+      00058F FC               [12] 1692 	mov	r4,a
+      000590 8F 05            [24] 1693 	mov	ar5,r7
+      000592 8C 82            [24] 1694 	mov	dpl,r4
+      000594 C0 07            [24] 1695 	push	ar7
+      000596 C0 06            [24] 1696 	push	ar6
+      000598 12r04rF9         [24] 1697 	lcall	_lcd_write_byte
+                                   1698 ;	serial.c:300: i2c_ack();
+      00059B 12r04r14         [24] 1699 	lcall	_i2c_ack
+                                   1700 ;	serial.c:301: delay(1);
+      00059E 90 00 01         [24] 1701 	mov	dptr,#0x0001
+      0005A1 12r00r00         [24] 1702 	lcall	_delay
+      0005A4 D0 06            [24] 1703 	pop	ar6
+      0005A6 D0 07            [24] 1704 	pop	ar7
+                                   1705 ;	serial.c:302: lcd_write_byte(cmd_l|0x08);
+      0005A8 43 06 08         [24] 1706 	orl	ar6,#0x08
+      0005AB 8E 82            [24] 1707 	mov	dpl,r6
+      0005AD 12r04rF9         [24] 1708 	lcall	_lcd_write_byte
+                                   1709 ;	serial.c:303: i2c_ack();
+      0005B0 12r04r14         [24] 1710 	lcall	_i2c_ack
+                                   1711 ;	serial.c:304: delay(10);
+      0005B3 90 00 0A         [24] 1712 	mov	dptr,#0x000a
+      0005B6 12r00r00         [24] 1713 	lcall	_delay
+                                   1714 ;	serial.c:305: i2c_stop();
+                                   1715 ;	serial.c:306: }
+      0005B9 02r04r0B         [24] 1716 	ljmp	_i2c_stop
+                                   1717 ;------------------------------------------------------------
+                                   1718 ;Allocation info for local variables in function 'lcd_send_data'
+                                   1719 ;------------------------------------------------------------
+                                   1720 ;dataw                     Allocated to registers r7 
+                                   1721 ;dataw_l                   Allocated to registers r6 
+                                   1722 ;dataw_u                   Allocated to registers r7 
+                                   1723 ;------------------------------------------------------------
+                                   1724 ;	serial.c:308: void lcd_send_data(unsigned char dataw){
+                                   1725 ;	-----------------------------------------
+                                   1726 ;	 function lcd_send_data
+                                   1727 ;	-----------------------------------------
+      0005BC                       1728 _lcd_send_data:
+      0005BC AF 82            [24] 1729 	mov	r7,dpl
+                                   1730 ;	serial.c:310: dataw_l=(dataw<<4)&0xf0;
+      0005BE 8F 06            [24] 1731 	mov	ar6,r7
+      0005C0 EE               [12] 1732 	mov	a,r6
+      0005C1 C4               [12] 1733 	swap	a
+      0005C2 54 F0            [12] 1734 	anl	a,#0xf0
+      0005C4 FE               [12] 1735 	mov	r6,a
+      0005C5 53 06 F0         [24] 1736 	anl	ar6,#0xf0
+                                   1737 ;	serial.c:311: dataw_u=(dataw &0xf0);
+      0005C8 53 07 F0         [24] 1738 	anl	ar7,#0xf0
+                                   1739 ;	serial.c:312: i2c_start();
+      0005CB C0 07            [24] 1740 	push	ar7
+      0005CD C0 06            [24] 1741 	push	ar6
+      0005CF 12r04r02         [24] 1742 	lcall	_i2c_start
+                                   1743 ;	serial.c:313: lcd_write_byte(slave_add);
+      0005D2 85*23 82         [24] 1744 	mov	dpl,_slave_add
+      0005D5 12r04rF9         [24] 1745 	lcall	_lcd_write_byte
+                                   1746 ;	serial.c:314: i2c_ack();
+      0005D8 12r04r14         [24] 1747 	lcall	_i2c_ack
+      0005DB D0 06            [24] 1748 	pop	ar6
+      0005DD D0 07            [24] 1749 	pop	ar7
+                                   1750 ;	serial.c:315: lcd_write_byte(dataw_u|0x0D);
+      0005DF 7D 00            [12] 1751 	mov	r5,#0x00
+      0005E1 74 0D            [12] 1752 	mov	a,#0x0d
+      0005E3 4F               [12] 1753 	orl	a,r7
+      0005E4 FB               [12] 1754 	mov	r3,a
+      0005E5 8D 04            [24] 1755 	mov	ar4,r5
+      0005E7 8B 82            [24] 1756 	mov	dpl,r3
+      0005E9 C0 07            [24] 1757 	push	ar7
+      0005EB C0 06            [24] 1758 	push	ar6
+      0005ED C0 05            [24] 1759 	push	ar5
+      0005EF 12r04rF9         [24] 1760 	lcall	_lcd_write_byte
+                                   1761 ;	serial.c:316: i2c_ack();
+      0005F2 12r04r14         [24] 1762 	lcall	_i2c_ack
+                                   1763 ;	serial.c:317: delay(1);
+      0005F5 90 00 01         [24] 1764 	mov	dptr,#0x0001
+      0005F8 12r00r00         [24] 1765 	lcall	_delay
+      0005FB D0 05            [24] 1766 	pop	ar5
+      0005FD D0 06            [24] 1767 	pop	ar6
+      0005FF D0 07            [24] 1768 	pop	ar7
+                                   1769 ;	serial.c:318: lcd_write_byte(dataw_u|0x09);
+      000601 43 07 09         [24] 1770 	orl	ar7,#0x09
+      000604 8F 82            [24] 1771 	mov	dpl,r7
+      000606 C0 06            [24] 1772 	push	ar6
+      000608 12r04rF9         [24] 1773 	lcall	_lcd_write_byte
+                                   1774 ;	serial.c:319: i2c_ack();
+      00060B 12r04r14         [24] 1775 	lcall	_i2c_ack
+                                   1776 ;	serial.c:320: delay(10);
+      00060E 90 00 0A         [24] 1777 	mov	dptr,#0x000a
+      000611 12r00r00         [24] 1778 	lcall	_delay
+      000614 D0 06            [24] 1779 	pop	ar6
+                                   1780 ;	serial.c:321: lcd_write_byte(dataw_l|0x0D);
+      000616 7F 00            [12] 1781 	mov	r7,#0x00
+      000618 74 0D            [12] 1782 	mov	a,#0x0d
+      00061A 4E               [12] 1783 	orl	a,r6
+      00061B FC               [12] 1784 	mov	r4,a
+      00061C 8F 05            [24] 1785 	mov	ar5,r7
+      00061E 8C 82            [24] 1786 	mov	dpl,r4
+      000620 C0 07            [24] 1787 	push	ar7
+      000622 C0 06            [24] 1788 	push	ar6
+      000624 12r04rF9         [24] 1789 	lcall	_lcd_write_byte
+                                   1790 ;	serial.c:322: i2c_ack();
+      000627 12r04r14         [24] 1791 	lcall	_i2c_ack
+                                   1792 ;	serial.c:323: delay(1);
+      00062A 90 00 01         [24] 1793 	mov	dptr,#0x0001
+      00062D 12r00r00         [24] 1794 	lcall	_delay
+      000630 D0 06            [24] 1795 	pop	ar6
+      000632 D0 07            [24] 1796 	pop	ar7
+                                   1797 ;	serial.c:324: lcd_write_byte(dataw_l|0x09);
+      000634 43 06 09         [24] 1798 	orl	ar6,#0x09
+      000637 8E 82            [24] 1799 	mov	dpl,r6
+      000639 12r04rF9         [24] 1800 	lcall	_lcd_write_byte
+                                   1801 ;	serial.c:325: i2c_ack();
+      00063C 12r04r14         [24] 1802 	lcall	_i2c_ack
+                                   1803 ;	serial.c:326: delay(10);
+      00063F 90 00 0A         [24] 1804 	mov	dptr,#0x000a
+      000642 12r00r00         [24] 1805 	lcall	_delay
+                                   1806 ;	serial.c:327: i2c_stop();
+                                   1807 ;	serial.c:328: }
+      000645 02r04r0B         [24] 1808 	ljmp	_i2c_stop
+                                   1809 ;------------------------------------------------------------
+                                   1810 ;Allocation info for local variables in function 'lcd_send_str'
+                                   1811 ;------------------------------------------------------------
+                                   1812 ;p                         Allocated to registers 
+                                   1813 ;------------------------------------------------------------
+                                   1814 ;	serial.c:330: void lcd_send_str(unsigned char *p){
+                                   1815 ;	-----------------------------------------
+                                   1816 ;	 function lcd_send_str
+                                   1817 ;	-----------------------------------------
+      000648                       1818 _lcd_send_str:
+      000648 AD 82            [24] 1819 	mov	r5,dpl
+      00064A AE 83            [24] 1820 	mov	r6,dph
+      00064C AF F0            [24] 1821 	mov	r7,b
+                                   1822 ;	serial.c:331: while(*p != '\0')
+      00064E                       1823 00101$:
+      00064E 8D 82            [24] 1824 	mov	dpl,r5
+      000650 8E 83            [24] 1825 	mov	dph,r6
+      000652 8F F0            [24] 1826 	mov	b,r7
+      000654 12r00r00         [24] 1827 	lcall	__gptrget
+      000657 FC               [12] 1828 	mov	r4,a
+      000658 60 18            [24] 1829 	jz	00104$
+                                   1830 ;	serial.c:332: lcd_send_data(*p++);
+      00065A 8C 82            [24] 1831 	mov	dpl,r4
+      00065C 0D               [12] 1832 	inc	r5
+      00065D BD 00 01         [24] 1833 	cjne	r5,#0x00,00116$
+      000660 0E               [12] 1834 	inc	r6
+      000661                       1835 00116$:
+      000661 C0 07            [24] 1836 	push	ar7
+      000663 C0 06            [24] 1837 	push	ar6
+      000665 C0 05            [24] 1838 	push	ar5
+      000667 12r05rBC         [24] 1839 	lcall	_lcd_send_data
+      00066A D0 05            [24] 1840 	pop	ar5
+      00066C D0 06            [24] 1841 	pop	ar6
+      00066E D0 07            [24] 1842 	pop	ar7
+      000670 80 DC            [24] 1843 	sjmp	00101$
+      000672                       1844 00104$:
+                                   1845 ;	serial.c:333: }
+      000672 22               [24] 1846 	ret
+                                   1847 ;------------------------------------------------------------
+                                   1848 ;Allocation info for local variables in function 'lcd_init'
+                                   1849 ;------------------------------------------------------------
+                                   1850 ;	serial.c:335: void lcd_init(){
+                                   1851 ;	-----------------------------------------
+                                   1852 ;	 function lcd_init
+                                   1853 ;	-----------------------------------------
+      000673                       1854 _lcd_init:
+                                   1855 ;	serial.c:336: lcd_send_cmd(0x02);	
+      000673 75 82 02         [24] 1856 	mov	dpl,#0x02
+      000676 12r05r30         [24] 1857 	lcall	_lcd_send_cmd
+                                   1858 ;	serial.c:337: lcd_send_cmd(0x28);
+      000679 75 82 28         [24] 1859 	mov	dpl,#0x28
+      00067C 12r05r30         [24] 1860 	lcall	_lcd_send_cmd
+                                   1861 ;	serial.c:338: lcd_send_cmd(0x0C);
+      00067F 75 82 0C         [24] 1862 	mov	dpl,#0x0c
+      000682 12r05r30         [24] 1863 	lcall	_lcd_send_cmd
+                                   1864 ;	serial.c:339: lcd_send_cmd(0x06);
+      000685 75 82 06         [24] 1865 	mov	dpl,#0x06
+      000688 12r05r30         [24] 1866 	lcall	_lcd_send_cmd
+                                   1867 ;	serial.c:340: lcd_send_cmd(0x01);
+      00068B 75 82 01         [24] 1868 	mov	dpl,#0x01
+                                   1869 ;	serial.c:341: }
+      00068E 02r05r30         [24] 1870 	ljmp	_lcd_send_cmd
+                                   1871 ;------------------------------------------------------------
+                                   1872 ;Allocation info for local variables in function 'main'
+                                   1873 ;------------------------------------------------------------
+                                   1874 ;i                         Allocated to registers 
+                                   1875 ;------------------------------------------------------------
+                                   1876 ;	serial.c:343: void main(void)
+                                   1877 ;	-----------------------------------------
+                                   1878 ;	 function main
+                                   1879 ;	-----------------------------------------
+      000691                       1880 _main:
+                                   1881 ;	serial.c:347: TH0 = (65536 - 922) / 256;
+      000691 75 8C FC         [24] 1882 	mov	_TH0,#0xfc
+                                   1883 ;	serial.c:348: TL0 = (65536 - 922) % 256;
+      000694 75 8A 66         [24] 1884 	mov	_TL0,#0x66
+                                   1885 ;	serial.c:349: IE |= 0x82;
+      000697 AE A8            [24] 1886 	mov	r6,_IE
+      000699 43 06 82         [24] 1887 	orl	ar6,#0x82
+      00069C 8E A8            [24] 1888 	mov	_IE,r6
+                                   1889 ;	serial.c:350: TMOD = 0x21;
+      00069E 75 89 21         [24] 1890 	mov	_TMOD,#0x21
+                                   1891 ;	serial.c:351: SCON = 0x40;
+      0006A1 75 98 40         [24] 1892 	mov	_SCON,#0x40
+                                   1893 ;	serial.c:352: TH1 = 256 - 11.0592 * 1000 * 1000 / 12 / 32 / 9600 + 0.5;
+      0006A4 75 8D FD         [24] 1894 	mov	_TH1,#0xfd
+                                   1895 ;	serial.c:353: TCON |= 0x40;
+      0006A7 AE 88            [24] 1896 	mov	r6,_TCON
+      0006A9 43 06 40         [24] 1897 	orl	ar6,#0x40
+      0006AC 8E 88            [24] 1898 	mov	_TCON,r6
+                                   1899 ;	serial.c:354: TCON |= 0x10;
+      0006AE AE 88            [24] 1900 	mov	r6,_TCON
+      0006B0 43 06 10         [24] 1901 	orl	ar6,#0x10
+      0006B3 8E 88            [24] 1902 	mov	_TCON,r6
+                                   1903 ;	serial.c:355: SCON |= 0x02;
+      0006B5 AE 98            [24] 1904 	mov	r6,_SCON
+      0006B7 43 06 02         [24] 1905 	orl	ar6,#0x02
+      0006BA 8E 98            [24] 1906 	mov	_SCON,r6
+                                   1907 ;	serial.c:357: lcd_slave(slave1);
+      0006BC 85*22 82         [24] 1908 	mov	dpl,_slave1
+      0006BF 12r04rF5         [24] 1909 	lcall	_lcd_slave
+                                   1910 ;	serial.c:358: lcd_init();
+      0006C2 12r06r73         [24] 1911 	lcall	_lcd_init
+                                   1912 ;	serial.c:359: lcd_send_cmd(0x80);
+      0006C5 75 82 80         [24] 1913 	mov	dpl,#0x80
+      0006C8 12r05r30         [24] 1914 	lcall	_lcd_send_cmd
+                                   1915 ;	serial.c:360: lcd_send_str("Hello World!    ");
+      0006CB 90r00r14         [24] 1916 	mov	dptr,#___str_0
+      0006CE 75 F0 80         [24] 1917 	mov	b,#0x80
+      0006D1 12r06r48         [24] 1918 	lcall	_lcd_send_str
+                                   1919 ;	serial.c:361: lcd_send_cmd(0xC0);
+      0006D4 75 82 C0         [24] 1920 	mov	dpl,#0xc0
+      0006D7 12r05r30         [24] 1921 	lcall	_lcd_send_cmd
+                                   1922 ;	serial.c:362: lcd_send_str("   Bob is Great!");
+      0006DA 90r00r25         [24] 1923 	mov	dptr,#___str_1
+      0006DD 75 F0 80         [24] 1924 	mov	b,#0x80
+      0006E0 12r06r48         [24] 1925 	lcall	_lcd_send_str
+      0006E3                       1926 00125$:
+                                   1927 ;	serial.c:365: display();
+      0006E3 12r00r24         [24] 1928 	lcall	_display
+                                   1929 ;	serial.c:366: if(P3_5 == 0){
+      0006E6 20 B5 2B         [24] 1930 	jb	_P3_5,00109$
+                                   1931 ;	serial.c:367: delay(5);
+      0006E9 90 00 05         [24] 1932 	mov	dptr,#0x0005
+      0006EC 12r00r00         [24] 1933 	lcall	_delay
+                                   1934 ;	serial.c:368: if(P3_5 == 0){
+      0006EF 20 B5 22         [24] 1935 	jb	_P3_5,00109$
+                                   1936 ;	serial.c:369: while(!P3_5){display();};
+      0006F2                       1937 00101$:
+      0006F2 20 B5 05         [24] 1938 	jb	_P3_5,00103$
+      0006F5 12r00r24         [24] 1939 	lcall	_display
+      0006F8 80 F8            [24] 1940 	sjmp	00101$
+      0006FA                       1941 00103$:
+                                   1942 ;	serial.c:370: choice++;
+      0006FA 05*0D            [12] 1943 	inc	_choice
+      0006FC E4               [12] 1944 	clr	a
+      0006FD B5*0D 02         [24] 1945 	cjne	a,_choice,00176$
+      000700 05*0E            [12] 1946 	inc	(_choice + 1)
+      000702                       1947 00176$:
+                                   1948 ;	serial.c:371: P1 = 0xFF;
+      000702 75 90 FF         [24] 1949 	mov	_P1,#0xff
+                                   1950 ;	serial.c:372: if(choice > 2){
+      000705 C3               [12] 1951 	clr	c
+      000706 74 02            [12] 1952 	mov	a,#0x02
+      000708 95*0D            [12] 1953 	subb	a,_choice
+      00070A E4               [12] 1954 	clr	a
+      00070B 95*0E            [12] 1955 	subb	a,(_choice + 1)
+      00070D 50 05            [24] 1956 	jnc	00109$
+                                   1957 ;	serial.c:373: choice = 0;
+      00070F E4               [12] 1958 	clr	a
+      000710 F5*0D            [12] 1959 	mov	_choice,a
+      000712 F5*0E            [12] 1960 	mov	(_choice + 1),a
+      000714                       1961 00109$:
+                                   1962 ;	serial.c:377: if(P3_3 == 0){
+      000714 20 B3 21         [24] 1963 	jb	_P3_3,00116$
+                                   1964 ;	serial.c:378: delay(5);
+      000717 90 00 05         [24] 1965 	mov	dptr,#0x0005
+      00071A 12r00r00         [24] 1966 	lcall	_delay
+                                   1967 ;	serial.c:379: if(P3_3 == 0){
+      00071D 20 B3 18         [24] 1968 	jb	_P3_3,00116$
+                                   1969 ;	serial.c:380: while(!P3_3){display();};
+      000720                       1970 00110$:
+      000720 20 B3 05         [24] 1971 	jb	_P3_3,00112$
+      000723 12r00r24         [24] 1972 	lcall	_display
+      000726 80 F8            [24] 1973 	sjmp	00110$
+      000728                       1974 00112$:
+                                   1975 ;	serial.c:381: displayNum[0]++;
+      000728 AE*00            [24] 1976 	mov	r6,(_displayNum + 0)
+      00072A AF*01            [24] 1977 	mov	r7,(_displayNum + 1)
+      00072C 0E               [12] 1978 	inc	r6
+      00072D BE 00 01         [24] 1979 	cjne	r6,#0x00,00181$
+      000730 0F               [12] 1980 	inc	r7
+      000731                       1981 00181$:
+      000731 8E*00            [24] 1982 	mov	(_displayNum + 0),r6
+      000733 8F*01            [24] 1983 	mov	(_displayNum + 1),r7
+                                   1984 ;	serial.c:382: rollOverNum();
+      000735 12r03r76         [24] 1985 	lcall	_rollOverNum
+      000738                       1986 00116$:
+                                   1987 ;	serial.c:385: if(P3_2 == 0){
+      000738 20 B2 21         [24] 1988 	jb	_P3_2,00123$
+                                   1989 ;	serial.c:386: delay(5);
+      00073B 90 00 05         [24] 1990 	mov	dptr,#0x0005
+      00073E 12r00r00         [24] 1991 	lcall	_delay
+                                   1992 ;	serial.c:387: if(P3_2 == 0){
+      000741 20 B2 18         [24] 1993 	jb	_P3_2,00123$
+                                   1994 ;	serial.c:388: while(!P3_2){display();};
+      000744                       1995 00117$:
+      000744 20 B2 05         [24] 1996 	jb	_P3_2,00119$
+      000747 12r00r24         [24] 1997 	lcall	_display
+      00074A 80 F8            [24] 1998 	sjmp	00117$
+      00074C                       1999 00119$:
+                                   2000 ;	serial.c:389: displayNum[0]--;
+      00074C AE*00            [24] 2001 	mov	r6,(_displayNum + 0)
+      00074E AF*01            [24] 2002 	mov	r7,(_displayNum + 1)
+      000750 1E               [12] 2003 	dec	r6
+      000751 BE FF 01         [24] 2004 	cjne	r6,#0xff,00185$
+      000754 1F               [12] 2005 	dec	r7
+      000755                       2006 00185$:
+      000755 8E*00            [24] 2007 	mov	(_displayNum + 0),r6
+      000757 8F*01            [24] 2008 	mov	(_displayNum + 1),r7
+                                   2009 ;	serial.c:390: rollUnderNum();
+      000759 12r03r10         [24] 2010 	lcall	_rollUnderNum
+      00075C                       2011 00123$:
+                                   2012 ;	serial.c:394: i2c_buttons();
+      00075C 12r04r63         [24] 2013 	lcall	_i2c_buttons
+                                   2014 ;	serial.c:398: }
+      00075F 02r06rE3         [24] 2015 	ljmp	00125$
+                                   2016 	.area CSEG    (CODE)
+                                   2017 	.area CONST   (CODE)
+      000000                       2018 _table:
+      000000 C0 00                 2019 	.byte #0xc0,#0x00	; 192
+      000002 F9 00                 2020 	.byte #0xf9,#0x00	; 249
+      000004 A4 00                 2021 	.byte #0xa4,#0x00	; 164
+      000006 B0 00                 2022 	.byte #0xb0,#0x00	; 176
+      000008 99 00                 2023 	.byte #0x99,#0x00	; 153
+      00000A 92 00                 2024 	.byte #0x92,#0x00	; 146
+      00000C 82 00                 2025 	.byte #0x82,#0x00	; 130
+      00000E F8 00                 2026 	.byte #0xf8,#0x00	; 248
+      000010 80 00                 2027 	.byte #0x80,#0x00	; 128
+      000012 90 00                 2028 	.byte #0x90,#0x00	; 144
+      000014                       2029 ___str_0:
+      000014 48 65 6C 6C 6F 20 57  2030 	.ascii "Hello World!    "
+             6F 72 6C 64 21 20 20
+             20 20
+      000024 00                    2031 	.db 0x00
+      000025                       2032 ___str_1:
+      000025 20 20 20 42 6F 62 20  2033 	.ascii "   Bob is Great!"
+             69 73 20 47 72 65 61
+             74 21
+      000035 00                    2034 	.db 0x00
+                                   2035 	.area XINIT   (CODE)
+                                   2036 	.area CABS    (ABS,CODE)
